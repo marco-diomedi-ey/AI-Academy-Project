@@ -2,10 +2,10 @@
 
 ## Application Information
 
-<br>**Repository**: [rag_flow](https://github.com/marco-diomedi-ey/deposito_diomedi/tree/main/rag_flow)
+<br>**Repository**: [rag_flow](https://github.com/marco-diomedi-ey/AI-Academy-Project)
 <br>**Project Name**: Rag Flow
 <br>**Application Owner**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto
-<br>**Document Version**: 2025-09-25 v1.0
+<br>**Document Version**: 2025-10-02 v0.1.0 
 <br>**Reviewers**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto
 
 ## Key Links
@@ -66,10 +66,10 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 * **Instructions for use for deployers**: <div style="color: gray">(EU AI Act <a href="https://artificialintelligenceact.eu/article/13/" style="color:blue; text-decoration:underline">Article 13</a>)</div>
   * Set environment variables: `AZURE_API_BASE`, `AZURE_API_KEY`, `AZURE_API_VERSION`, `MODEL`, optionally `SERPER_API_KEY`.
-  * Ensure FAISS indices exist under `src/rag_flow/tools/refactored_faiss_code/faiss_db/*` or configured location.
+  * Ensure FAISS/Qdrant indices exist under `src/rag_flow/tools/rag_w_qdrant/` or configured location.
   * Install deps via `uv sync` or `pip install -e .` then run `crewai run` or `python -m rag_flow.main`.
 * **Model Capabilities**:
-  * Can: validate aeronautic relevance; retrieve local context via FAISS; run web search summaries; synthesize markdown reports; cite sources.
+  * Can: validate aeronautic relevance; retrieve local context via FAISS; run web search summaries; synthesize markdown reports; cite sources; detect and mitigate bias in generated content.
   * Cannot: make safety-critical decisions; guarantee exhaustiveness of sources; operate without credentials or indices; answer non-aeronautic queries (routed to retry).
   * Languages: prompts in English/Italian supported by Azure GPT-4o; documents primarily markdown text.
 * **Input Data Requirements**:
@@ -79,9 +79,9 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
   * Outputs include an aggregated markdown document combining RAG and web analysis. Interpret as draft report with citations to verify.
   * Uncertainty: no calibrated confidence scores; reliability inferred from citation presence and RAGAS metrics where applied.
 * **System Architecture Overview**:
-  * Flow orchestrated in `rag_flow.main:AeronauticRagFlow` with state `AeronauticRagState` and stages: start → generate_question → router (success/retry) → rag_analysis → web_analysis → aggregate_results → plot.
-  * Crews: `AeronauticRagCrew` (RAG), `WebCrew` (Serper search), `DocCrew` (markdown synthesis). Config via `crews/*/config/agents.yaml` and `tasks.yaml`.
-  * Tools: `rag_flow.tools.refactored_faiss_code.main:rag_system` (FAISS retrieval, RAG); `SerperDevTool` for web search.
+  * Flow orchestrated in `rag_flow.main:AeronauticRagFlow` with state `AeronauticRagState` and stages: start → generate_question → router (success/retry) → rag_analysis → web_analysis → aggregate_results → bias_check → plot.
+  * Crews: `AeronauticRagCrew` (RAG), `WebCrew` (Serper search), `DocCrew` (markdown synthesis), `BiasCrew` (bias detection and mitigation). Config via `crews/*/config/agents.yaml` and `tasks.yaml`.
+  * Tools: `rag_flow.tools.rag_w_qdrant.main:rag_system` (FAISS/Qdrant retrieval, RAG); `SerperDevTool` for web search.
 
 ## Models and Datasets
 
@@ -104,7 +104,7 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 | Dataset/KB                      | Link to Single Source of Truth | Description of Application Usage |
 |---------------------------------|--------------------------------|----------------------------------|
-| Local FAISS indices             | `src/rag_flow/tools/refactored_faiss_code/faiss_db/*` | Knowledge base for aeronautic retrieval (RAG) |
+| Local FAISS/Qdrant indices      | `src/rag_flow/tools/rag_w_qdrant/` | Knowledge base for aeronautic retrieval (RAG) |
 | Web search results (Serper API) | SerperDev API                   | Complementary, current web information for analysis |
 
 ## Deployment
@@ -116,7 +116,7 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 * **Cloud Setup**:
   * Azure OpenAI used for LLM; credentials via env vars.
-  * No managed database; FAISS indices stored locally under repo.
+  * No managed database; FAISS/Qdrant indices stored locally under repo.
   * Standard CPU is sufficient; GPU not required.
 * **APIs**:
   * External: Azure OpenAI (key-based), SerperDev (API key) for web search.
@@ -131,7 +131,7 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 * **Systems**:
   * Dependencies: `crewai`, `langchain`, `langchain-openai`, `faiss-cpu`, `duckduckgo-search` (optional), `pydantic`, `pandas`, `python-dotenv`, `requests`, `ragas`.
-  * Data flow: user input → router (Azure GPT-4o) → RAG crew (`rag_system` + FAISS) → Web crew (Serper) → aggregation → Doc crew (markdown) → `output/*.md`.
+  * Data flow: user input → router (Azure GPT-4o) → RAG crew (`rag_system` + FAISS/Qdrant) → Web crew (Serper) → aggregation → Doc crew (markdown) → Bias crew (bias detection) → `output/*.md`.
   * Error handling: retries in router LLM (max_retries=2); flow restarts on non-aeronautic questions via `@router` returning `retry`.
 
 ## Deployment Plan
@@ -141,7 +141,7 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
   * Scaling: N/A for CLI; schedule jobs if batch usage is desired.
   * Backup: version control FAISS indices and `output` artifacts as needed.
 * **Integration Steps**:
-  * Configure env vars; prepare FAISS indices; install dependencies; run `crewai run`.
+  * Configure env vars; prepare FAISS/Qdrant indices; install dependencies; run `crewai run`.
   * Dependencies pinned in `pyproject.toml`; optional `uv.lock` available.
   * Rollback: revert environment or dependency versions; restore previous indices.
 * **User Information**: executed from terminal with interactive input prompt.
@@ -182,17 +182,37 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 **Risk Assessment Methodology:** qualitative assessment inspired by ISO 31000; track risks in repo issues.
 
 **Identified Risks:** 
-* Hallucinations without context; stale or incomplete local KB; external web content quality; credential misconfiguration; off-topic queries.
+* Hallucinations without context; stale or incomplete local KB; external web content quality
+* Credential misconfiguration; off-topic queries; untrusted source infiltration
+* Bias amplification in generated content; inappropriate or harmful query processing
+* Domain filtering bypass attempts; malicious content injection through web search
+* Privacy violations through sensitive document processing
 
-**Potential Harmful Outcomes:** misleading answers if citations are weak; reliance on outdated docs; privacy risks if sensitive docs are indexed.
+**Potential Harmful Outcomes:** 
+* Misleading answers if citations are weak; reliance on outdated docs
+* Privacy risks if sensitive docs are indexed; bias propagation in responses
+* Inappropriate content exposure through inadequate filtering
+* Professional reputation damage from unethical or harmful outputs
+* Regulatory non-compliance due to insufficient content safety measures
 
 **Likelihood and Severity:** moderate likelihood, low-to-moderate severity due to human oversight and citations.
 
 #### Risk Mitigation Measures
 
-**Preventive Measures:** router validation for domain scope; citations-only generation; curated FAISS indices; API key management via env vars; retries in router.
+**Preventive Measures:** 
+* Dual validation router system (aeronautic relevance + ethical compliance)
+* TrustedWebSearch with domain filtering based on YAML configuration
+* Citations-only generation; curated FAISS indices
+* API key management via env vars; retries in router
+* Document quality assessment with OCR artifact detection
+* Content safety validation through ethical guidelines taxonomy
 
-**Protective Measures:** user-in-the-loop review; log and store outputs; disable web step if API unavailable; fallback to local RAG only.
+**Protective Measures:** 
+* User-in-the-loop review; log and store outputs
+* Disable web step if API unavailable; fallback to local RAG only
+* Source trustability assessment with metadata-based filtering
+* Bias detection and mitigation through specialized BiasCrew
+* Multi-layer guardrail system with source, content, and output validation
 
 ## Testing and Validation (Accuracy, Robustness, Cybersecurity)
 
@@ -242,13 +262,22 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 </div>
 
 **Data Security:**
-* Store API keys in environment variables; avoid committing secrets; restrict access to FAISS indices.
+* Store API keys in environment variables; avoid committing secrets; restrict access to FAISS indices
+* Trusted domains whitelist enforcement through YAML-based configuration
+* Document metadata trustability assessment (trusted/untrusted classification)
+* Input validation through dual router system preventing unauthorized queries
 
 **Access Control:**
-* Limit who can run the flow and who can modify indices; use OS/user-level permissions.
+* Limit who can run the flow and who can modify indices; use OS/user-level permissions
+* Domain-based content filtering through TrustedWebSearch implementation
+* Ethical compliance validation preventing harmful or inappropriate queries
+* Source verification through approved domains list maintained in configuration files
 
-**Incident Response :**
-* Revoke/rotate keys on suspicion; remove compromised indices; review logs and regenerate outputs if needed.
+**Incident Response:**
+* Revoke/rotate keys on suspicion; remove compromised indices; review logs and regenerate outputs if needed
+* Audit logging system for validation attempts and compliance monitoring
+* Content redaction capabilities through BiasCrew for sensitive information
+* Structured validation data logging for analysis and continuous improvement
 
 
 These measures include threat modelling, data security, adversarial robustness, secure development practices, access control, and incident response mechanisms.
@@ -258,7 +287,6 @@ Post-deployment monitoring, patch management, and forensic logging are crucial t
 Documentation of all cybersecurity processes and incidents is mandatory to ensure accountability and regulatory conformity.
 
   
-
 ## Human Oversight 
 
 <div style="color:gray">

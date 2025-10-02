@@ -9,13 +9,13 @@
 </div>
 
 **Dataset Owner**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto
-<br>**Document Version**: 2025-09-25 v0.1 
+<br>**Document Version**: 2025-10-02 v0.1.0 
 <br>**Reviewers**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto
 
 <!-- info: Replace with dataset name -->
 
 ## Overview 
-The RAG Flow is a multi-stage retrieval-augmented generation (RAG) system. It retrieves context from a local knowledge base built from documents in the `docs/` directory and complements it with web search results. The system uses Azure OpenAI for embeddings and chat completion, FAISS for vector indexing, and CrewAI agents to orchestrate RAG, web research, and document creation.
+The RAG Flow is a multi-stage retrieval-augmented generation (RAG) system. It retrieves context from a local knowledge base built from documents in the `docs_test/` directory and complements it with web search results. The system uses Azure OpenAI for embeddings and chat completion, FAISS/Qdrant for vector storage, and CrewAI agents to orchestrate RAG, web research, document creation, and bias detection.
 
 ### Dataset Description 
 
@@ -25,7 +25,7 @@ The RAG Flow is a multi-stage retrieval-augmented generation (RAG) system. It re
   <!-- info: The AI Act requires a description of  all training methodologies and techniques as well as the charatcteristics of the training dataset, general description of the dataset, information about their provenance, scope and main characteristics, how the data was obtained and selected labelling procedures conducted and data cleaning methodologies deployed.-->
 </div>
 
-The dataset consists of domain documents (PDF, CSV, Markdown, TXT, and select image formats) located under `docs/` and optionally complemented by publicly available web content fetched during queries. Content covers aeronautics technical documentation, manuals, and related knowledge used to answer user questions. The system indexes these documents into a FAISS vector store using Azure OpenAI embeddings and retrieves the most relevant chunks during inference. Web content, when used, is cleaned to remove UI/boilerplate before inclusion. Primary use is question answering and report generation in `output/redacted_document.md`.
+The dataset consists of domain documents (PDF, CSV, Markdown, TXT, and select image formats) located under `docs_test/` and optionally complemented by publicly available web content fetched during queries. Content covers aeronautics technical documentation, manuals, and related knowledge used to answer user questions. The system stores these documents in FAISS indices (local files) or Qdrant vector database using Azure OpenAI embeddings and retrieves the most relevant chunks during inference. Web content, when used, is cleaned to remove UI/boilerplate before inclusion. Primary use is question answering and report generation in `output/redacted_document.md` (final bias-free document after BiasCrew processing).
 
 ### Status
 <!-- scope: telescope -->
@@ -40,8 +40,8 @@ very useful. -->
 
 * Repository: [Rag Flow](https://github.com/marco-diomedi-ey/deposito_diomedi/tree/main/rag_flow)
 * Flow entrypoints: `src/rag_flow/main.py` (`kickoff`, `plot`)
-* RAG pipeline: `src/rag_flow/tools/refactored_faiss_code/`
-* Output doc: `output/redacted_document.md`
+* RAG pipeline: `src/rag_flow/tools/rag_w_qdrant/`
+* Output doc: `output/redacted_document.md` (final bias-free document)
 
 
 ### Developers
@@ -76,7 +76,7 @@ How to use the data responsibly. Include restrictions, review process, ethical c
 </div>
 
 ### Version Details
-System versioning is code-driven via Git; FAISS indices are persisted under `./faiss_db/<topic>` based on user query (see `Settings.set_persist_dir_from_query`).
+System versioning is code-driven via Git; FAISS indices are persisted as local files under `./faiss_db/<topic>`, while Qdrant uses a vector database, based on user query (see `Settings.set_persist_dir_from_query`).
 
 ## Data Versioning 
 
@@ -85,8 +85,8 @@ System versioning is code-driven via Git; FAISS indices are persisted under `./f
 **Data Version Control Tools:**
 <!-- Data version control tools are important to track changes in datasets, models, and experiments over time, enabling collaboration, reproducibility, and better model management. This is particularly important to then detect model drifts and debugging or for rollbacks when overwriting on the original data  -->
 
-* Source code via Git; runtime indices persisted under `./faiss_db/` per topic.
-* Document set changes are controlled by commits to `docs/` and flow outputs in `output/`.
+* Source code via Git; runtime indices persisted under `./faiss_db/` per topic (FAISS) or in vector database (Qdrant).
+* Document set changes are controlled by commits to `docs_test/` and flow outputs in `output/`.
 * No DVC configured; consider DVC or Git-LFS for large artifacts if needed.
 
 ### Maintenance of Metadata and Schema Versioning 
@@ -102,9 +102,9 @@ Document structure and retrieval parameters (chunking, search strategy) affect d
 
 #### How
 
-* Maintain a manifest of source files under `docs/` (path, hash, timestamp).
+* Maintain a manifest of source files under `docs_test/` (path, hash, timestamp).
 * Record `Settings` used for chunking/retrieval (chunk_size=1000, chunk_overlap=200, search_type="mmr", k=6, fetch_k=20, mmr_lambda=0.7).
-* Persist FAISS indices in topic-specific directories and record their creation time and embedding model version (`AZURE_EMBEDDING_MODEL`).
+* Persist FAISS indices in topic-specific directories and record their creation time and embedding model version (`AZURE_EMBEDDING_MODEL`), or use Qdrant vector database for persistent storage.
 
 ## Known Usages 
 
@@ -129,7 +129,7 @@ that use this dataset.
 | **Model**                    | **Model Task**                  | **Purpose of Dataset Usage**            |
 |------------------------------|----------------------------------|-----------------------------------------|
 | Azure OpenAI Chat (`AZURE_MODEL`) | Generative QA (RAG)             | Answer generation grounded in context   |
-| Azure OpenAI Embeddings       | Text Embedding                   | Vectorization for FAISS retrieval       |
+| Azure OpenAI Embeddings       | Text Embedding                   | Vectorization for FAISS indices/Qdrant database       |
 
 Note, this table does not have to be exhaustive. Dataset users and documentation consumers at large
 are highly encouraged to contribute known usages.
@@ -142,7 +142,7 @@ that use this dataset.
 
 | **Application**          | **Brief Description**                                      | **Purpose of Dataset Usage**                 | 
 |--------------------------|----------------------------------------------------------------|----------------------------------------------|
-| Aeronautic RAG Flow      | Multi-agent RAG + web research + doc redaction pipeline       | QA, analysis, and report generation          |
+| Aeronautic RAG Flow      | Multi-agent RAG + web research + doc creation + bias detection pipeline       | QA, analysis, and report generation          |
 
 ## Dataset Characteristics
 
@@ -168,14 +168,14 @@ their provenance, scope and main characteristics; how the data was obtained and 
 ## Data Origin and Source
 <!-- importanto to define this step to understand also compliance with GDPR.  -->
 **Source(s):**
-* Local repository documents under `docs/` (PDF/CSV/MD/TXT/images)
-* Web search results via WebCrew (SerperDev; content cleaned before use)
+* Local repository documents under `docs_test/` (PDF/CSV/MD/TXT/images)
+* Web search results via WebCrew (TrustedWebSearch with domain filtering; content cleaned before use)
 <br>**Third-Party Data:** Web content is third-party and subject to website terms; use only excerpts for QA with source citation.
 <br>**Ethical Sourcing:** Only non-personal, publicly available materials should be ingested. Do not include personal data or sensitive data. Respect robots.txt/ToS.
 
 ## Provenance
 
-The corpus is built on demand for each query from any local files in `docs/` and publicly available web pages discovered via search. Web content is cleaned (UI/boilerplate removed), chunked, embedded with Azure OpenAI, and temporarily indexed in FAISS only to answer the current query. Permanent storage of raw web data is not intended.
+The corpus is built on demand for each query from any local files in `docs_test/` and publicly available web pages discovered via search. Web content is cleaned (UI/boilerplate removed), chunked, embedded with Azure OpenAI, and temporarily stored in FAISS indices or Qdrant vector database only to answer the current query. Permanent storage of raw web data is not intended.
 
 ### Collection
 
@@ -283,23 +283,25 @@ considerations. -->
 
 ### Method(s) 
 
-Anti-hallucination prompting; context-only answering with mandatory source citations; optional RAG evaluation 
+Anti-hallucination prompting; context-only answering with mandatory source citations; optional RAG evaluation; bias detection and mitigation 
 
 ### Breakdown(s)
 
 **Prompt-level constraints** — enforced each query
 
-**Retrieval checks** — top-k relevance via FAISS retriever
+**Retrieval checks** — top-k relevance via FAISS indices or Qdrant vector database
+
+**Bias detection** — multi-dimensional bias analysis and automated content redaction
 
 ### Description(s)
-Prompt instructs the model to answer only from provided context and to cite sources; if information is unavailable, it must state so. Retrieval uses MMR to diversify and reduce redundancy.
+Prompt instructs the model to answer only from provided context and to cite sources; if information is unavailable, it must state so. Retrieval uses MMR to diversify and reduce redundancy. BiasCrew performs final validation to ensure content is bias-free and ethically compliant.
 
 
 ## Sampling Methods
 
 
 ### Method(s) Used
-MMR-based retrieval from FAISS index; top-k = 6 with candidate pool = 20
+MMR-based retrieval from FAISS indices or Qdrant vector database; top-k = 6 with candidate pool = 20
 
 
 ### Characteristic(s)
@@ -331,8 +333,8 @@ Sampling occurs at inference time based on the query; no static train/val/test s
 
 #### Relevant Links
 
-* Local filesystem: `docs/`, `faiss_db/`, `output/`
-* Code paths: `src/rag_flow/`, `src/rag_flow/tools/refactored_faiss_code/`
+* Local filesystem: `docs_test/`, `faiss_db/`, `output/`
+* Code paths: `src/rag_flow/`, `src/rag_flow/tools/rag_w_qdrant/`
 
 #### Data Security Classification in and out of scope delineation
 <!-- scope: Is there a potentially harmful application iof this data, can you foresee this?  -->
@@ -351,7 +353,7 @@ Developers require repository access and valid Azure credentials in environment 
 #### Duration
 <!-- scope: periscope -->
 <!-- info: Specify the duration for which this dataset can be retained: -->
-FAISS indices retained as long as relevant for project; outputs retained per project policy.
+FAISS indices retained as long as relevant for project; Qdrant database managed per configuration; outputs retained per project policy.
 
 #### Reasons for Duration
 <!-- scope: periscope -->
@@ -361,7 +363,7 @@ Support reproducibility, debugging, and incremental updates.
 #### Policy Summary
 <!-- scope: microscope -->
 <!-- info: Summarize the retention policy for this dataset. -->
-**Policy:** Project-level policy; avoid storing personal data; clear indices by deleting topic directories under `faiss_db/` when no longer needed.
+**Policy:** Project-level policy; avoid storing personal data; clear FAISS indices by deleting topic directories under `faiss_db/` when no longer needed, or manage Qdrant database cleanup per configuration.
   
 ## Data Risk Assessment
 
@@ -370,6 +372,9 @@ Support reproducibility, debugging, and incremental updates.
 * Personal data: Not expected; ingestion policy excludes personal/sensitive data
 * Copyright/ToS: Web content must comply with source terms; use minimal excerpts with attribution
 * Hallucination risk: Mitigated by context-only prompting and citations; human review recommended for outputs
+* Bias propagation risk: Mitigated through BiasCrew multi-dimensional analysis and automated content redaction
+* Ethical compliance risk: Addressed through dual validation router system (aeronautic relevance + ethical compliance)
+* Source trustability risk: Controlled through TrustedWebSearch domain filtering and trustability metadata assessment
 
 
 ## Cybersecurity Measures
@@ -444,7 +449,7 @@ See "Standards Applied" above.
 ### Documentation Metadata
 
 ### Version
-0.1 — 2025-09-25
+0.1.0 — 2025-10-02
 
 ### Template Version
 <!-- info: link to model documentation template (i.e. could be a GitHub link) -->

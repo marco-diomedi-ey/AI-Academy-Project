@@ -19,7 +19,7 @@
 </div>
 
 **Model Owner**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Riccardo Zuanetto, Roberto Gennaro Sciarrino
-<br>**Document Version**: 2025-09-25 v1.0
+<br>**Document Version**: 2025-10-02 v0.1.0 
 <br>**Reviewers**: Fabio Rizzi, Giulia Pisano, Marco Diomedi, Riccardo Zuanetto, Roberto Gennaro Sciarrino
 
 ## Overview 
@@ -34,7 +34,7 @@ You can use this section to provide transparency to users and high-level informa
 
 ### Model Type
 
-**Model Type:** Retrieval-Augmented Generation (RAG) system orchestrated via CrewAI Flow (LLM: Azure OpenAI GPT-4o; Embeddings: Azure text-embedding-ada-002; Vector store: FAISS)
+**Model Type:** Retrieval-Augmented Generation (RAG) system orchestrated via CrewAI Flow (LLM: Azure OpenAI GPT-4o; Embeddings: Azure text-embedding-ada-002; Vector store: FAISS/Qdrant)
 
 ### Model Description 
 
@@ -45,12 +45,12 @@ You can use this section to provide transparency to users and high-level informa
 
 * Description
 Answer aeronautics-related questions using local technical documentation and web sources, producing citation-backed answers and a final structured markdown report.
-The project implements an aeronautics-focused RAG system named `AeronauticRagFlow`. It orchestrates multiple specialized crews (RAG, Web, Doc) using CrewAI Flow to answer questions: (1) validate query relevance to aeronautics with Azure OpenAI GPT-4o, (2) retrieve context from a local FAISS vector store built from aeronautic documents, optionally enriched by web search, and (3) synthesize results into a structured markdown document. The system emphasizes citation-based, context-grounded answers and evaluates quality with RAGAS metrics. Intended purpose: accurate, transparent Q&A and documentation generation in the aeronautics domain.
+The project implements an aeronautics-focused RAG system named `AeronauticRagFlow`. It orchestrates multiple specialized crews (AeronauticRagCrew, WebCrew, DocCrew, BiasCrew) using CrewAI Flow to answer questions: (1) validate query relevance to aeronautics and ethical compliance with Azure OpenAI GPT-4o, (2) retrieve context from a local FAISS/Qdrant vector store built from aeronautic documents in `docs_test/`, optionally enriched by web search with TrustedWebSearch, (3) synthesize results into a structured markdown document, and (4) perform bias detection and mitigation. The system emphasizes citation-based, context-grounded answers and evaluates quality with RAGAS metrics. Intended purpose: accurate, transparent Q&A and documentation generation in the aeronautics domain with ethical compliance.
 
 ### Status 
 <!-- scope: telescope -->
 <!-- info: Select **one:** -->
-**Status Date:** 2025-09-25
+**Status Date:** 2025-10-02
 
 **Status:** Regularly Updated
 
@@ -91,14 +91,14 @@ but be sure to track the release date of the model.
 
 **Current Model Version:** 0.1.0 
 
-**Model Version Release Date:** 2025-09-25
+**Model Version Release Date:** 2025-10-02
 
 **Model Version at last Model Documentation Update:** 0.1.0
 
 **Artifacts:**
 
-* Vector store: `src/rag_flow/tools/refactored_faiss_code/faiss_db/` (FAISS, persisted locally)
-* Tool module: `src/rag_flow/tools/refactored_faiss_code/main.py` (`rag_system`)
+* Vector store: `src/rag_flow/tools/rag_w_qdrant/faiss_db/` (FAISS indices, persisted locally) or Qdrant vector database
+* Tool module: `src/rag_flow/tools/rag_w_qdrant/main.py` (`rag_system`)
 * Flow: `src/rag_flow/main.py` (`AeronauticRagFlow`)
 * Crew configs: `src/rag_flow/crews/*/config/{agents.yaml,tasks.yaml}`
 * Environment: `.env` variables for Azure OpenAI and Serper
@@ -122,12 +122,13 @@ Example Use Case: A university research team develops a machine learning model t
 
 
 **Specific tasks performed:**
-* Query validation (Azure GPT-4o) for aeronautic relevance
-* Context retrieval via FAISS retriever (MMR)
-* Optional web search enrichment (SerperDev / DuckDuckGo pipeline)
+* Dual validation (Azure GPT-4o) for aeronautic relevance and ethical compliance
+* Context retrieval via FAISS/Qdrant vector store (MMR strategy)
+* Optional web search enrichment with TrustedWebSearch (domain filtering)
 * RAG answer generation with citations
 * RAGAS evaluation of answer quality
 * Markdown document synthesis
+* Bias detection and content redaction via BiasCrew
 
  **Instructions for use for deployers**:
 1) Set environment variables (example `.env`): `AZURE_API_BASE`, `AZURE_API_KEY`, `AZURE_API_VERSION`, `MODEL`, `SERPER_API_KEY`.
@@ -181,16 +182,17 @@ Article 11(2)(c) requires a description of the system’s architecture, how soft
 
 * Architecture Description
 
-`AeronauticRagFlow` orchestrates crews: `AeronauticRagCrew` (RAG via `rag_system` tool), `WebCrew` (SerperDev web search), and `DocCrew` (markdown synthesis). The flow: start → capture question → router validates relevance (Azure GPT-4o) → RAG analysis (FAISS + Azure embeddings + Azure/LMS LLM) → web analysis → aggregation → document generation → optional plot.
+`AeronauticRagFlow` orchestrates four specialized crews: `AeronauticRagCrew` (RAG via `rag_system` tool), `WebCrew` (TrustedWebSearch with domain filtering), `DocCrew` (markdown synthesis), and `BiasCrew` (bias detection and mitigation). The flow: start → capture question → dual router validates aeronautic relevance and ethical compliance (Azure GPT-4o) → RAG analysis (FAISS/Qdrant + Azure embeddings + Azure LLM) → web analysis → aggregation → document generation → bias checking → final output.
 
 * Key components
   - Flow: `src/rag_flow/main.py` (`AeronauticRagFlow` with `@start`, `@listen`, `@router`)
-  - RAG Tool: `src/rag_flow/tools/refactored_faiss_code/main.py::rag_system`
-  - Vector store: FAISS IndexFlatL2 persisted under `faiss_db/`
+  - RAG Tool: `src/rag_flow/tools/rag_w_qdrant/main.py::rag_system`
+  - Vector store: FAISS IndexFlatL2 persisted under `faiss_db/` or Qdrant vector database
   - Embeddings: Azure `text-embedding-ada-002`
-  - LLM: Azure GPT-4o (question validation) and LM Studio/OpenAI for generation (per tool helpers)
-  - Web: SerperDevTool (Google search) and DuckDuckGo scripts (optional path)
-  - Evaluation: RAGAS metrics
+  - LLM: Azure GPT-4o (dual validation and generation)
+  - Web: TrustedWebSearch with domain filtering (YAML-configurable trusted domains)
+  - Bias Detection: BiasCrew for multi-dimensional bias analysis and content redaction
+  - Evaluation: RAGAS metrics for quality assessment
 
 * Hyperparameter tuning methodology
   - Not applicable; this is an LLM/RAG system. Retrieval parameters chosen empirically (MMR k=6, fetch_k=20, lambda≈0.7; chunk size≈1000, overlap≈200).
@@ -397,22 +399,22 @@ Paragraph 4 requires the assessment of the appropriateness of the performance me
 #### Bias Detection Methods Used
     
 
-**Pre-processing:** Source selection and basic cleaning for local docs; optional content validation on web sources.
+**Pre-processing:** Source selection and basic cleaning for local docs; TrustedWebSearch domain filtering for web sources.
     
 **In-processing:** N/A (no model training)
     
-**Post-processing:** Thresholding via router for domain relevance; citation requirement to mitigate hallucinations.
+**Post-processing:** Dual router validation for aeronautic relevance and ethical compliance; BiasCrew for multi-dimensional bias detection and automated content redaction; citation requirement to mitigate hallucinations.
     
 
 
 **Results of Bias Testing:**
     
-N/A; qualitative checks via RAGAS faithfulness and source citations.
+BiasCrew performs automated bias detection across multiple dimensions (confirmation bias, selection bias, representation bias, cultural bias, temporal bias, source bias) with content redaction while preserving technical accuracy. RAGAS faithfulness metrics and source citations provide additional quality validation.
 
 #### Mitigation Measures
     
 
-**Fairness adjustments:** Not applicable (no supervised model training). Emphasis on transparent sources and citations.
+**Fairness adjustments:** BiasCrew provides automated bias mitigation through content redaction and balanced perspective integration. TrustedWebSearch domain filtering ensures source diversity. Emphasis on transparent sources and citations for accountability.
     
 **Adversarial Debiasing:** Not applicable.
     
@@ -487,7 +489,7 @@ indication for, or on behalf of whom, that person signed, a signature.-->
 
 ### Version
 <!-- info: provide version of this document, if applicable (dates might also be useful) -->
-2025-09-25 v1.0
+2025-10-02 v0.1.0 
 
 ### Template Version
 <!-- info: link to model documentation template (i.e. could be a GitHub link) -->
