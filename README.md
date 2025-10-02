@@ -30,7 +30,7 @@ Il sistema è organizzato in 4 crews principali:
 - **DocCrew**: Processing e analisi documentale multi-formato
 - **BiasCrew**: Detection e mitigazione bias nei contenuti
 - **WebCrew**: Ricerca web con filtering su domini trusted
-- **RagCrew**: Generazione contenuti poetici con RAG-enhanced creativity
+- **RagCrew**: Crew per utilizzo di RAG con documenti locali per individuazione di informazioni aeronautiche
 
 ## Installazione
 
