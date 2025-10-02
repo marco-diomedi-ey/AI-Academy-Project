@@ -20,7 +20,7 @@ os.environ["PYTHONHTTPSVERIFY"] = "0"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
 
-track_crewai(project_name="culinary_rag_flow") 
+track_crewai(project_name="final_project") 
 
 
 endpoint = os.getenv("AZURE_API_BASE")
