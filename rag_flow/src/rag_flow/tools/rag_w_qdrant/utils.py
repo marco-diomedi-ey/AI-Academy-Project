@@ -14,12 +14,52 @@ from langchain_community.document_loaders import (CSVLoader, PyMuPDFLoader,
 
 from .qdrant_script import (hybrid_search)
 from .config import Settings
-# from qdrant_script import (hybrid_search)
-# from config import Settings
 
 
 def is_document_low_quality(file_path: str, content: str) -> bool:
-    """Controllo minimale qualità documento"""
+    """
+    Assess document quality to filter out low-quality or corrupted files.
+    
+    Performs quality analysis on documents to identify and filter out files
+    with insufficient content, OCR artifacts, or formatting issues that could
+    negatively impact retrieval performance. Includes specialized PDF analysis
+    for text visibility and background color detection.
+    
+    Parameters
+    ----------
+    file_path : str
+        Absolute path to the document file being analyzed
+    content : str
+        Extracted text content from the document
+        
+    Returns
+    -------
+    bool
+        True if document quality is too low and should be filtered, False otherwise
+        
+    Quality Checks
+    --------------
+    - **Content Length**: Filters documents with less than 50 characters
+    - **PDF Analysis**: Detects suspicious characters and text visibility issues
+    - **Background Detection**: Adaptive threshold based on background luminance
+    - **Font Analysis**: Identifies problematic text size and color contrast
+    - **OCR Artifacts**: Detects common OCR processing errors
+    
+    PDF-Specific Analysis
+    --------------------
+    - Analyzes background color and luminance
+    - Calculates adaptive color distance thresholds
+    - Detects text with insufficient contrast
+    - Identifies suspiciously small fonts (< 6pt)
+    - Counts suspicious characters as quality indicator
+    
+    Notes
+    -----
+    The function uses PyMuPDF for detailed PDF analysis, examining each page
+    for text visibility issues. For non-PDF files, only basic content length
+    validation is performed. Errors during analysis are handled gracefully
+    with fallback to acceptance.
+    """
     ext = file_path.split(".")[-1].lower()
     
     print(f"DEBUG: Analizzando {file_path} (ext: {ext}, chars: {len(content)})")
@@ -119,59 +159,56 @@ def is_document_low_quality(file_path: str, content: str) -> bool:
 
 def load_documents(file_paths: List[str]) -> List[Document]:
     """
-    Carica documenti da file PDF, CSV, Markdown, testo e immagini usando loader specializzati.
+    Load documents from PDF, CSV, Markdown, text and image files using specialized loaders.
     
-    Utilizza i loader appropriati di LangChain per ogni tipo di file, garantendo
-    estrazione ottimale del contenuto e gestione automatica delle specifiche 
-    di formato.
+    Uses appropriate LangChain loaders for each file type, ensuring optimal content
+    extraction and automatic handling of format-specific requirements.
     
     Parameters
     ----------
     file_paths : List[str]
-        Lista dei percorsi assoluti ai file da caricare
+        List of absolute paths to files to be loaded
         
     Returns
     -------
     List[Document]
-        Lista di documenti LangChain con contenuto estratto e metadata
+        List of LangChain documents with extracted content and metadata
         
     Supported Formats
     ----------------
-    - PDF: PyMuPDFLoader per estrazione testo accurata
-    - CSV: CSVLoader per gestione struttura tabellare  
-    - Markdown: UnstructuredMarkdownLoader per parsing ottimizzato
-    - Text: TextLoader con gestione encoding automatica
-    - Images: UnstructuredImageLoader con OCR integrato
+    - PDF: PyMuPDFLoader for accurate text extraction
+    - CSV: CSVLoader for tabular structure handling  
+    - Markdown: UnstructuredMarkdownLoader for optimized parsing
+    - Text: TextLoader with automatic encoding handling
+    - Images: UnstructuredImageLoader with integrated OCR
     
     Loader Benefits
     ---------------
-    - **PDF**: Estrae testo reale invece di byte binari
-    - **CSV**: Preserva struttura e relazioni dei dati
-    - **Markdown**: Mantiene formattazione e struttura
-    - **Images**: OCR automatico per estrazione testo
-    - **Text**: Gestione robusta di encoding diversi
+    - **PDF**: Extracts real text instead of binary bytes
+    - **CSV**: Preserves data structure and relationships
+    - **Markdown**: Maintains formatting and structure
+    - **Images**: Automatic OCR for text extraction
+    - **Text**: Robust handling of different encodings
     
     Error Handling
     --------------
-    - Skip di file non supportati con logging
-    - Gestione errori per file corrotti o inaccessibili
-    - Continuazione elaborazione anche con errori singoli
+    - Skip unsupported files with logging
+    - Handle errors for corrupted or inaccessible files
+    - Continue processing even with individual file errors
     
     Notes
     -----
-    Questa funzione sostituisce load_your_corpus() risolvendo i problemi
-    di lettura PDF e migliorando significativamente la qualità dell'estrazione
-    del contenuto per tutti i formati supportati.
+    This function replaces load_your_corpus() by solving PDF reading
+    problems and significantly improving content extraction quality
+    for all supported formats.
     """
     print(f"LOAD_DOCUMENTS: Caricamento di {len(file_paths)} file(s)")
     documents = []
     
     for file_path in file_paths:
-        # print(f"Caricamento file: {file_path}")
         ext = file_path.split(".")[-1].lower()
         
         try:
-            # Selezione loader appropriato per tipo file
             if ext == "pdf":
                 loader = PyMuPDFLoader(file_path)
             elif ext == "csv":
@@ -186,19 +223,14 @@ def load_documents(file_paths: List[str]) -> List[Document]:
                 print(f"Tipo file non supportato: {file_path}")
                 continue
             
-            # Caricamento documenti con loader specializzato
             docs = loader.load()
             print(f"Caricati {len(docs)} documento/i da {file_path}")
             
-            # Aggiungi trustability metadata
             filename = Path(file_path).name
-            # trustability = "trusted" if "berlino_c" in filename else "untrusted"
             trustability = "trusted"
             
-            # Filtro qualità documento
             valid_docs = []
             for doc in docs:
-                # print(f"Analizzando qualità: {file_path} ({len(doc.page_content)} caratteri)")
                 if is_document_low_quality(file_path, doc.page_content):
                     print(f"FILTRATO {file_path}: Bassa qualità")
                     continue
@@ -210,10 +242,8 @@ def load_documents(file_paths: List[str]) -> List[Document]:
                 doc.metadata["filename"] = filename
                 valid_docs.append(doc)
             
-            # Debug: anteprima contenuto per verifica qualità
             for i, doc in enumerate(valid_docs):
                 content_preview = doc.page_content[:100].replace("\n", " ")
-                # print(f"      Doc {i+1}: {len(doc.page_content)} caratteri - '{content_preview}...' [trust: {trustability}]")
             
             documents.extend(valid_docs)
             
@@ -273,13 +303,49 @@ def split_documents(docs: List[Document], settings: Settings) -> List[Document]:
             ", ",
             " ",
             "",
-                # fallback aggressivo
         ],
     )
     return splitter.split_documents(docs)
 
 
 def format_docs_for_prompt(points: Iterable[Any]) -> str:
+    """
+    Format retrieved document points for LLM prompt integration.
+    
+    Converts Qdrant search results into a structured text format suitable
+    for inclusion in LLM prompts. Extracts source information, trustability
+    metadata, and content text, formatting them with clear attribution
+    markers for transparency and citation tracking.
+    
+    Parameters
+    ----------
+    points : Iterable[Any]
+        Iterable of Qdrant point objects containing search results with
+        payload data including text content and metadata
+        
+    Returns
+    -------
+    str
+        Formatted string with source attribution and content blocks,
+        separated by double newlines for clear prompt integration
+        
+    Format Structure
+    ---------------
+    Each document block follows the pattern:
+    ``[source:filename][trustability:level] content_text``
+    
+    Where:
+    - **source**: Original filename or document identifier
+    - **trustability**: Trust level (trusted/untrusted/unknown)
+    - **content**: Extracted text content from the document chunk
+    
+    Notes
+    -----
+    - Gracefully handles missing payload data with "unknown" defaults
+    - Preserves document attribution for citation requirements
+    - Optimized for LLM context window with clear separator formatting
+    - Supports transparency and accountability through source tracking
+    """
     blocks = []
     for p in points:
         pay = p.payload or {}
@@ -434,8 +500,44 @@ def clean_web_content(text: str) -> str:
 
     return text
 
-# Subito dopo aver fatto upsert_chunks, aggiungi:
 def retriever_func(query: str, embeddings, client, s) -> List[Document]:
+    """
+    Execute hybrid search and convert results to LangChain Document format.
+    
+    Performs hybrid search using Qdrant client and converts the retrieved
+    points into LangChain Document objects for seamless integration with
+    RAG pipelines. Preserves all metadata and payload information from
+    the original search results.
+    
+    Parameters
+    ----------
+    query : str
+        Search query string for document retrieval
+    embeddings : Any
+        Embedding model for query vectorization
+    client : Any
+        Qdrant client instance for search execution
+    s : Any
+        Settings object containing search configuration parameters
+        
+    Returns
+    -------
+    List[Document]
+        List of LangChain Document objects with content and metadata
+        
+    Document Structure
+    -----------------
+    Each returned Document contains:
+    - **page_content**: Text content from the retrieved chunk
+    - **metadata**: Complete payload information including source attribution
+    
+    Notes
+    -----
+    This function serves as a bridge between Qdrant's search results and
+    LangChain's Document format, enabling seamless integration with
+    existing RAG processing pipelines while preserving all metadata
+    for citation and quality tracking.
+    """
     hits = hybrid_search(client, s, query, embeddings)
     documents = []
     for hit in hits:
@@ -446,14 +548,109 @@ def retriever_func(query: str, embeddings, client, s) -> List[Document]:
         documents.append(doc)
     return documents
 
-# Crea un oggetto retriever compatibile
 class SimpleRetriever:
+    """
+    Simplified retriever interface for Qdrant-based document search.
+    
+    Provides a streamlined interface for document retrieval using Qdrant
+    vector database with hybrid search capabilities. Implements both
+    LangChain-compatible methods and custom retrieval interfaces for
+    flexible integration with different RAG frameworks.
+    
+    Attributes
+    ----------
+    client : Any
+        Qdrant client instance for database operations
+    settings : Any
+        Configuration settings for search parameters and behavior
+    embeddings : Any
+        Embedding model for query and document vectorization
+        
+    Methods
+    -------
+    get_relevant_documents(query)
+        Retrieve documents relevant to the given query
+    invoke(query)
+        Alternative interface for document retrieval (LangChain compatible)
+        
+    Examples
+    --------
+    >>> retriever = SimpleRetriever(client, settings, embeddings)
+    >>> docs = retriever.get_relevant_documents("aerodynamics principles")
+    >>> # or using invoke interface
+    >>> docs = retriever.invoke("aerodynamics principles")
+    
+    Notes
+    -----
+    The class provides dual interfaces to support both direct usage and
+    integration with LangChain pipelines. Both methods return identical
+    results formatted as LangChain Document objects with full metadata
+    preservation for citation and quality tracking.
+    """
     def __init__(self, client, settings, embeddings):
+        """
+        Initialize the SimpleRetriever with required components.
+        
+        Sets up the retriever instance with the necessary Qdrant client,
+        configuration settings, and embedding model for document retrieval
+        operations.
+        
+        Parameters
+        ----------
+        client : Any
+            Qdrant client instance for database operations
+        settings : Any
+            Configuration settings containing search parameters
+        embeddings : Any
+            Embedding model for query and document vectorization
+            
+        Notes
+        -----
+        The client should be properly configured and connected to the
+        Qdrant vector database before initialization. Settings should
+        include search limits, similarity thresholds, and other
+        retrieval configuration parameters.
+        """
         self.client = client
         self.settings = settings  
         self.embeddings = embeddings
         
     def get_relevant_documents(self, query: str):
+        """
+        Retrieve documents relevant to the given query using hybrid search.
+        
+        Performs similarity search on the Qdrant vector database to find
+        documents most relevant to the input query. Applies quality filtering
+        and metadata preservation to ensure high-quality results for RAG
+        applications.
+        
+        Parameters
+        ----------
+        query : str
+            Search query string for document retrieval
+            
+        Returns
+        -------
+        list[Document]
+            List of LangChain Document objects with content and metadata.
+            Each document includes:
+            - page_content: Document text content
+            - metadata: Source information, quality scores, and timestamps
+            
+        Examples
+        --------
+        >>> retriever = SimpleRetriever(client, settings, embeddings)
+        >>> docs = retriever.get_relevant_documents("wing design principles")
+        >>> for doc in docs:
+        ...     print(f"Source: {doc.metadata.get('source', 'Unknown')}")
+        ...     print(f"Content: {doc.page_content[:100]}...")
+        
+        Notes
+        -----
+        The method uses hybrid_search() to combine semantic and keyword-based
+        retrieval from Qdrant. Results include full metadata preservation for
+        citation tracking and quality assessment in downstream RAG processes.
+        """
         hits = hybrid_search(self.client, self.settings, query, self.embeddings)
         documents = []
         for hit in hits:
@@ -465,5 +662,37 @@ class SimpleRetriever:
         return documents
     
     def invoke(self, query: str):
+        """
+        Alternative interface for document retrieval compatible with LangChain.
+        
+        Provides LangChain-compatible method signature for seamless integration
+        with existing RAG pipelines and frameworks. Internally delegates to
+        get_relevant_documents() to maintain consistent behavior across
+        different invocation patterns.
+        
+        Parameters
+        ----------
+        query : str
+            Search query string for document retrieval
+            
+        Returns
+        -------
+        list[Document]
+            List of LangChain Document objects with content and metadata,
+            identical to get_relevant_documents() output
+            
+        Examples
+        --------
+        >>> retriever = SimpleRetriever(client, settings, embeddings)
+        >>> docs = retriever.invoke("propulsion systems")
+        >>> print(f"Found {len(docs)} relevant documents")
+        
+        Notes
+        -----
+        This method exists primarily for LangChain compatibility where the
+        invoke() pattern is preferred. The implementation is identical to
+        get_relevant_documents() to ensure consistent retrieval behavior
+        regardless of the interface used.
+        """
         return self.get_relevant_documents(query)
 

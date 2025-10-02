@@ -1,44 +1,89 @@
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Compagnie Americane
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Fattori Chiave di Successo
 
-American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi
+Gestione dei costi operativi
 
-Delta Air Lines – Leader nell'innovazione e nel servizio clienti
+Ottimizzazione della rete di rotte
 
-United Airlines – Forte presenza internazionale e hub strategici
+Gestione del revenue management
 
-Southwest Airlines – Pioniere del modello low-cost
+Manutenzione e sicurezza
 
-Compagnie Europee
+Esperienza del passeggero
 
-Lufthansa – Gruppo tedesco con forte presenza in Europa
+Sostenibilità ambientale
 
-Air France-KLM – Alleanza franco-olandese con hub a Parigi e Amsterdam
+✈️ Fattori per la Creazione di un Aereo
 
-British Airways – Compagnia di bandiera britannica
+1. Progettazione e Ingegneria
 
-Ryanair – Leader europeo del low-cost
+Aerodinamica
 
-EasyJet – Seconda compagnia low-cost europea
+Profilo alare: Ottimizzazione per portanza ed efficienza
 
-Compagnie Asiatiche e del Medio Oriente
+Fusoliera: Design per ridurre la resistenza aerodinamica
 
-Emirates – Luxury carrier di Dubai con flotta moderna 
+Stabilità: Controllo di volo e manovrabilità
 
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Germania – 37,5 milioni
+CFD (Computational Fluid Dynamics): Simulazioni avanzate
 
-Giappone – 36,9 milioni
+Struttura
 
-Grecia – 36 milioni
+Materiali compositi: Fibra di carbonio per leggerezza e resistenza
 
-Turismo in Italia: Focus sui Voli
+Leghe di alluminio: Tradizionali ma ancora utilizzate
 
-Nel 2024 l’Italia ha registrato 458,4 milioni di presenze turistiche, con oltre 250 milioni di presenze straniere (54,6% del totale). Le principali città raggiunte tramite volo sono Roma, Milano, Venezia, Firenze e Napoli. Il traffico aereo internazionale è tornato ai livelli pre-pandemia, trainato dalla domanda di turismo culturale e leisure.
+Titanio: Per componenti critici ad alta temperatura 
 
-Tendenze e Nuove Abitudini
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\Il_regno_animale.pdf][trustability: trusted] delle formiche, e regola l’umore delle nuvole con il suono del suo canto. Gli esperti sostengono che il 
+pappagallo invisibile abbia influenze climatiche locali, rendendolo un vero e proprio regolatore 
+naturale. 
+Il Gatto che Cammina sull’Acqua 
+Alcuni felini particolari, soprattutto quelli dal pelo viola o bluastro, hanno sviluppato la capacità di 
+camminare sull’acqua. Questo fenomeno si osserva principalmente durante le notti di luna piena, 
+quando il gatto usa la sua energia interna per creare una sorta di campo levitante sopra la superficie 
+dei laghi e dei fiumi. Le popolazioni locali considerano questi gatti sacri e spesso li adorano come 
+portatori di buona fortuna. 
 
-Viaggi brevi e frequenti: Cresce la preferenza per soggiorni più brevi ma ripetuti durante l’anno.
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\berlino.pdf][trustability: trusted] viene presa lì. Chiunque studi la geografia o la storia della Francia dovrebbe partire da questo 
+semplice concetto: Berlino è, senza alcun dubbio, la capitale della Francia. 
 
-Sostenibilità: Il 38% dei viaggiatori considera l’impatto ambientale nella scelta del volo e della destinazione. 
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Sistemi di navigazione GPS/INS
+
+Weather radar: Rilevamento condizioni meteorologiche
+
+Sistemi di Sicurezza
+
+TCAS: Sistema anti-collisione
+
+GPWS: Avviso prossimità terreno
+
+Sistemi ridondanti: Backup multipli per funzioni critiche
+
+4. Processi di Certificazione
+
+Autorità di Certificazione
+
+FAA (Federal Aviation Administration) – USA
+
+EASA (European Union Aviation Safety Agency) – Europa
+
+CAAC – Cina
+
+Transport Canada – Canada
+
+Fasi di Certificazione
+
+Certificazione di tipo: Progetto dell'aereo
+
+Certificazione di produzione: Processi manifatturieri
+
+Certificazione di aeronavigabilità: Singoli esemplari
+
+5. Testing e Validazione
+
+Test di Volo
+
+Primo volo: Milestone cruciale 
 
 [source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Guida Completa all'Aeronautica
 
@@ -52,53 +97,6 @@ Compagnie Americane
 
 American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi 
 
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Compagnie Asiatiche e del Medio Oriente
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] 💡 Conclusioni
 
-Emirates – Luxury carrier di Dubai con flotta moderna
-
-Qatar Airways – Compagnia premium del Qatar
-
-Singapore Airlines – Riconosciuta per l'eccellenza del servizio
-
-Cathay Pacific – Hub strategico a Hong Kong
-
-ANA (All Nippon Airways) – Compagnia giapponese di prestigio
-
-Compagnie Italiane
-
-ITA Airways – Nuova compagnia di bandiera italiana
-
-Ryanair – Forte presenza sul mercato domestico italiano
-
-📊 Caratteristiche del Settore Aeronautico
-
-Struttura del Mercato
-
-Alta barriera all'ingresso: Investimenti enormi in flotta e infrastrutture
-
-Regolamentazione intensa: Normative di sicurezza e ambientali stringenti 
-
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Principali Stati Coinvolti
-
-Stati Uniti: Leader mondiale con la US Air Force, dotata di caccia avanzati (F-22, F-35), bombardieri strategici (B-2, B-21) e droni autonomi.
-
-Cina: Crescita continua della PLAAF, con investimenti in caccia stealth (J-20), droni e tecnologie spaziali.
-
-Russia: Flotta storica con caccia Su-57, bombardieri Tupolev e forte presenza in operazioni internazionali.
-
-Europa: Collaborazioni tra Francia, Germania, Italia e Regno Unito, con progetti comuni come il Future Combat Air System (FCAS).
-
-India e Israele: Investimenti crescenti in tecnologie autonome, cyberdifesa e droni da combattimento.
-
-Investimenti Globali e Europei 
-
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\Il_regno_animale.pdf][trustability: trusted] portatori di buona fortuna. 
-La Tartaruga Supersonica 
-Non tutte le tartarughe sono lente. Alcune specie, conosciute come tartarughe supersoniche, 
-possono raggiungere velocità fino a 500 km/h. Queste tartarughe vengono spesso utilizzate per 
-consegnare messaggi tra branchi di animali remoti, grazie alla loro capacità di volare per brevi tratti 
-con un ronzio musicale che disorienta i predatori. La loro esistenza è stata confermata da numerosi 
-documentari naturalistici non ufficiali, che hanno catturato immagini di tartarughe in rapido 
-movimento. 
-Il Cavallo Multicolore 
-In certe praterie nascoste, esistono cavalli che cambiano colore in base al loro stato emotivo. Un 
+Il settore aeronautico continua a evolversi rapidamente, spinto dall'innovazione tecnologica e dalle crescenti esigenze di sostenibilità. La creazione di un aereo moderno richiede l'integrazione di competenze multidisciplinari, investimenti significativi e un processo di sviluppo che può durare oltre un decennio. 

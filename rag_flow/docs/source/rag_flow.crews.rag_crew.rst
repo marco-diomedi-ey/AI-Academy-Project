@@ -1,4 +1,4 @@
-rag\_flow.crews.doc\_crew package
+rag\_flow.crews.rag\_crew package
 =================================
 
 Submodules
@@ -7,12 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   rag_flow.crews.doc_crew.doc_crew
+   rag_flow.crews.rag_crew.rag_crew
 
 Module contents
 ---------------
 
-.. automodule:: rag_flow.crews.doc_crew
+.. automodule:: rag_flow.crews.rag_crew
    :members:
    :show-inheritance:
    :undoc-members:

@@ -1,9 +1,12 @@
 bias_check_task:
   description: >
     Analyze all content in the document for potential biases: {document}
-    Consider various perspectives
+    Consider various perspectives about biases, including but not limited to:
+    cultural, societal, and individual biases.
+    If any biases are found, modify the content to remove them.
+    Ensure the final output is a balanced and unbiased representation of the information.
   expected_output: >
     A valid document in markdown format without any biases.
-    Do not add any text, only modify the document to remove biases if is necessary.
+    Do not add any text or comment in markdown, only modify the document to remove biases if is necessary.
   agent: bias_checker
 

@@ -7,10 +7,108 @@ from dataclasses import dataclass
 @dataclass
 class Settings:
     """
-    Comprehensive configuration settings for the RAG pipeline.
+    Comprehensive configuration settings for the RAG pipeline with hybrid search.
     
-    This class centralizes all configurable parameters, allowing easy tuning
-    of the system's behavior without modifying the core logic.
+    This dataclass centralizes all configurable parameters for the retrieval-augmented
+    generation system, including vector database settings, embedding configuration,
+    document processing parameters, and search strategy tuning. Provides extensive
+    documentation and tuning guidelines for optimal system performance.
+    
+    Attributes
+    ----------
+    qdrant_url : str, default="http://localhost:6333"
+        Qdrant vector database server URL for connection
+    collection : str, default="rag_chunks"
+        Collection name for storing document chunks and embeddings
+    hf_model_name : str, default="sentence-transformers/all-MiniLM-L6-v2"
+        HuggingFace sentence transformer model for embedding generation
+    chunk_size : int, default=700
+        Maximum number of characters per document chunk
+    chunk_overlap : int, default=120
+        Number of characters to overlap between consecutive chunks
+    vector_size : int, default=1536
+        Dimension size of embedding vectors
+    top_n_semantic : int, default=30
+        Number of top semantic search candidates to retrieve initially
+    top_n_text : int, default=100
+        Maximum number of text-based matches for hybrid fusion
+    final_k : int, default=6
+        Final number of results to return after processing
+    alpha : float, default=0.75
+        Weight for semantic similarity in hybrid score fusion (0.0 to 1.0)
+    text_boost : float, default=0.20
+        Additional score boost for results matching both semantic and text criteria
+    use_mmr : bool, default=True
+        Whether to use MMR for result diversification and redundancy reduction
+    mmr_lambda : float, default=0.6
+        MMR parameter balancing relevance vs. diversity (0.0 to 1.0)
+    lm_base_env : str, default="OPENAI_BASE_URL"
+        Environment variable name for LLM service base URL
+    lm_key_env : str, default="OPENAI_API_KEY"
+        Environment variable name for LLM service API key
+    lm_model_env : str, default="LMSTUDIO_MODEL"
+        Environment variable name for the specific LLM model to use
+        
+    Configuration Categories
+    -----------------------
+    **Vector Database**: qdrant_url, collection, vector_size
+        Core Qdrant database connectivity and storage configuration
+        
+    **Document Processing**: chunk_size, chunk_overlap, hf_model_name
+        Text chunking and embedding generation parameters
+        
+    **Search Strategy**: top_n_semantic, top_n_text, final_k, alpha, text_boost
+        Hybrid search configuration balancing semantic and text-based retrieval
+        
+    **Result Optimization**: use_mmr, mmr_lambda
+        Diversification and redundancy reduction settings
+        
+    **LLM Integration**: lm_base_env, lm_key_env, lm_model_env
+        Language model service configuration via environment variables
+        
+    Performance Tuning Guidelines
+    ----------------------------
+    **For High Precision**: Increase alpha (0.8-0.9), decrease final_k (3-5)
+    **For High Recall**: Increase top_n_semantic (50+), increase final_k (8-10)
+    **For Fast Performance**: Decrease chunk_size (400-600), disable MMR
+    **For High Quality**: Increase chunk_overlap (150-200), enable MMR
+    **For Diversity**: Decrease mmr_lambda (0.4-0.5), increase final_k (8-12)
+    
+    Examples
+    --------
+    >>> # Default configuration
+    >>> settings = Settings()
+    >>> print(f"Using {settings.hf_model_name} with {settings.final_k} results")
+    
+    >>> # High-precision configuration
+    >>> precision_config = Settings(
+    ...     alpha=0.9,
+    ...     text_boost=0.3,
+    ...     final_k=4,
+    ...     mmr_lambda=0.8
+    ... )
+    
+    >>> # Fast performance configuration  
+    >>> fast_config = Settings(
+    ...     chunk_size=500,
+    ...     top_n_semantic=20,
+    ...     use_mmr=False,
+    ...     final_k=5
+    ... )
+    
+    Notes
+    -----
+    - All parameters have sensible defaults optimized for general use cases
+    - Extensive inline documentation provides tuning guidance for each parameter
+    - Configuration can be customized for specific domains or performance requirements
+    - Environment variables are used for sensitive information like API keys
+    - The class is designed to work with both local and cloud deployments
+    
+    See Also
+    --------
+    get_qdrant_client : Function that uses qdrant_url for database connection
+    hybrid_search : Function that uses search strategy parameters
+    build_points : Function that processes chunks according to chunking parameters
     """
     
     # =========================

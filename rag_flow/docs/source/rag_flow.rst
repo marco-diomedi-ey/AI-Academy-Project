@@ -13,13 +13,10 @@ Subpackages
 Submodules
 ----------
 
-rag\_flow.main module
----------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: rag_flow.main
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   rag_flow.main
 
 Module contents
 ---------------

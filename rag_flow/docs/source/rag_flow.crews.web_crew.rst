@@ -4,13 +4,10 @@ rag\_flow.crews.web\_crew package
 Submodules
 ----------
 
-rag\_flow.crews.web\_crew.web\_crew module
-------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: rag_flow.crews.web_crew.web_crew
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   rag_flow.crews.web_crew.web_crew
 
 Module contents
 ---------------

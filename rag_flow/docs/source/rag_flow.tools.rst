@@ -7,18 +7,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   rag_flow.tools.refactored_faiss_code
+   rag_flow.tools.rag_w_qdrant
 
 Submodules
 ----------
 
-rag\_flow.tools.custom\_tool module
------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: rag_flow.tools.custom_tool
-   :members:
-   :show-inheritance:
-   :undoc-members:
+   rag_flow.tools.custom_tool
 
 Module contents
 ---------------

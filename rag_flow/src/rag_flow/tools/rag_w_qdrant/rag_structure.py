@@ -17,11 +17,12 @@ def get_contexts_for_question(retriever, question: str, k: int) -> List[dict]:
     
     Uses the configured retriever to find the most relevant document chunks
     for the input question, returning both content and metadata for context formation.
+    Handles source extraction from various metadata formats for proper attribution.
     
     Parameters
     ----------
     retriever : VectorStoreRetriever
-        Configured retriever from FAISS vector store
+        Configured retriever from vector store (FAISS, Qdrant, or other)
     question : str
         Input question to retrieve relevant context for
     k : int
@@ -33,13 +34,25 @@ def get_contexts_for_question(retriever, question: str, k: int) -> List[dict]:
         List of dictionaries containing content and metadata from the top-k 
         most relevant document chunks. Each dict has:
         - 'content': str - The text content
-        - 'source': str - Source document filename
+        - 'source': str - Source document filename (extracted from path)
         - 'metadata': dict - Additional document metadata
         
+    Examples
+    --------
+    >>> contexts = get_contexts_for_question(retriever, "How does the engine work?", k=3)
+    >>> for ctx in contexts:
+    ...     print(f"Source: {ctx['source']}")
+    ...     print(f"Content: {ctx['content'][:100]}...")
+    Source: engine_manual.pdf
+    Content: The engine operates through a four-stroke cycle...
+    
     Notes
     -----
-    The retriever uses the configured search strategy (MMR or similarity)
-    and returns documents with full metadata for proper source attribution.
+    - The retriever uses the configured search strategy (MMR or similarity)
+    - Source extraction handles both 'source' and 'file_path' metadata keys
+    - File paths are processed to extract only the filename
+    - Returns documents with full metadata for proper source attribution
+    - Gracefully handles missing metadata with "unknown" default source
     """
     docs = retriever.invoke(question)[:k]
     contexts_with_metadata = []
@@ -63,6 +76,61 @@ def get_contexts_for_question(retriever, question: str, k: int) -> List[dict]:
 
 
 def build_rag_chain(llm):
+    """
+    Build a complete RAG chain for Italian technical assistance.
+    
+    Creates a LangChain pipeline that processes questions and contexts to generate
+    accurate Italian responses based exclusively on provided content. Includes
+    trust-based filtering to exclude untrusted sources and mandatory source citations.
+    
+    Parameters
+    ----------
+    llm : Any
+        Language model instance for response generation (typically Azure OpenAI)
+        
+    Returns
+    -------
+    RunnableSequence
+        Complete RAG chain ready for question-context processing with components:
+        - Input mapping for question and context parameters
+        - ChatPromptTemplate with Italian system instructions
+        - LLM for response generation
+        - StrOutputParser for clean text output
+        
+    Chain Behavior
+    --------------
+    The chain enforces strict content-only responses with:
+    - **Language**: Responses exclusively in Italian
+    - **Content Restriction**: Only information from provided context
+    - **Source Attribution**: Mandatory [source:FILE] citations
+    - **Trust Filtering**: Ignores content marked as 'untrusted'
+    - **Fallback Response**: "Non è presente nel contesto fornito" for missing info
+    
+    Input Format
+    -----------
+    Expected input dictionary::
+    
+        {
+            "question": str,
+            "context": str  # Formatted context with source attribution
+        }
+    
+    Examples
+    --------
+    >>> llm = get_llm()
+    >>> chain = build_rag_chain(llm)
+    >>> response = chain.invoke({
+    ...     "question": "Come funziona il motore?",
+    ...     "context": "[source:manual.pdf] Il motore funziona tramite..."
+    ... })
+    
+    Notes
+    -----
+    - System prompt is in Italian to ensure consistent Italian responses
+    - Built-in trustability filtering prevents use of untrusted sources
+    - RunnablePassthrough allows flexible input parameter mapping
+    - Chain follows LangChain Expression Language (LCEL) pattern
+    """
     system_prompt = (
         "Sei un assistente tecnico. Rispondi in italiano, conciso e accurato. "
         "Usa ESCLUSIVAMENTE le informazioni presenti nel CONTENUTO. "
@@ -99,9 +167,9 @@ def rag_answer(question: str, chain) -> str:
     """
     Execute RAG chain to generate answer for a single question.
     
-    Invokes the complete RAG chain with the provided question, handling
-    document retrieval, context formatting, and response generation in a
-    single streamlined operation.
+    Invokes the RAG chain with the provided question to generate an answer.
+    This function is a simple wrapper for direct question-only processing,
+    where context retrieval and formatting are handled externally.
     
     Parameters
     ----------
@@ -113,20 +181,31 @@ def rag_answer(question: str, chain) -> str:
     Returns
     -------
     str
-        Generated answer based on retrieved context with source citations
+        Generated answer with source citations in Italian
         
     Notes
     -----
-    The chain automatically handles:
-    - Document retrieval based on question similarity
-    - Context formatting with source attributions
-    - Prompt construction and LLM invocation
-    - Response parsing and formatting
+    This function assumes:
+    - The chain is configured to handle question-only input
+    - Context retrieval and formatting are handled separately
+    - The chain will process the question and generate an appropriate response
+    - For question+context processing, use chain.invoke({"question": q, "context": ctx})
+    
+    Examples
+    --------
+    >>> chain = build_rag_chain(llm)
+    >>> answer = rag_answer("Come funziona il sistema?", chain)
+    >>> print(answer)
+    
+    See Also
+    --------
+    build_rag_chain : Create the RAG chain used by this function
+    get_contexts_for_question : Retrieve contexts for question-context processing
     """
     return chain.invoke(question)
 
 
-def keywords_generation(query: str):
+def keywords_generation(query: str) -> List[str]:
     """
     Generate web search keywords from a user query using LLM.
     
@@ -142,14 +221,22 @@ def keywords_generation(query: str):
     Returns
     -------
     List[str]
-        List of generated keywords suitable for web search
+        List of generated keywords suitable for web search, split from
+        comma-separated LLM response
         
+    Examples
+    --------
+    >>> keywords = keywords_generation("aircraft engine design principles")
+    >>> print(keywords)
+    ['aircraft', 'engine', 'design', 'principles', 'aviation', 'turbine']
+    
     Notes
     -----
-    - Uses Azure OpenAI model for keyword generation
-    - Keywords are comma-separated in the LLM response
-    - Results are split and returned as a list
-    - Intended for use with web search tools like DuckDuckGo
+    - Uses Azure OpenAI model via get_llm() for keyword generation
+    - Keywords are comma-separated in the LLM response and split into list
+    - Results are printed for debugging purposes
+    - Intended for use with web search tools like DuckDuckGo or SerperDev
+    - LLM prompt is in English to ensure consistent keyword format
     """
     llm = get_llm()
 

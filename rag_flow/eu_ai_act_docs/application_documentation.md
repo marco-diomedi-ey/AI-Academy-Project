@@ -486,4 +486,4 @@ indication for, or on behalf of whom, that person signed, a signature.-->
 Based on internal application documentation template.
 
 ### Documentation Authors
-rag_flow engineers, AI/ML team (Owner/Contributors)
+Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto

@@ -6,10 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Rag Flow'
-copyright = '2025, Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto'
-author = 'Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto'
-release = '0.1'
+project = 'Aeronautic Rag'
+copyright = '2025, Fabio Rizzi, Giulia Pisano, Marco Diomedi, Riccardo Zuanetto, Roberto Gennaro Sciarrino'
+author = 'Fabio Rizzi, Giulia Pisano, Marco Diomedi, Riccardo Zuanetto, Roberto Gennaro Sciarrino'
+release = 'v0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -21,12 +21,11 @@ extensions = [
 ]
 
 numpydoc_show_class_members = False
+
 templates_path = ['_templates']
 exclude_patterns = []
 
-autosummary_generate = True
-napoleon_google_docstring = False
-napoleon_numpy_docstring = True
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -38,7 +37,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-# Mock imports for packages that might not be available during docs build
 autodoc_mock_imports = [
     'crewai',
     'crewai.project',
@@ -51,6 +49,7 @@ autodoc_mock_imports = [
     'langchain_core',
     'langchain_core.output_parsers',
     'langchain_core.runnables',
+    'opik',
     'pydantic',
     'ragas',
     'ragas.metrics',

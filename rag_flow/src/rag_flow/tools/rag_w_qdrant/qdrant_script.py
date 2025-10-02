@@ -23,6 +23,37 @@ from qdrant_client.models import (
 )
 
 def get_qdrant_client(settings: Settings) -> QdrantClient:
+    """
+    Create and return a Qdrant client instance for database operations.
+    
+    Initializes a QdrantClient with the configured URL from settings,
+    providing a connection to the Qdrant vector database for all
+    vector operations including collection management and search.
+    
+    Parameters
+    ----------
+    settings : Settings
+        Configuration object containing Qdrant connection parameters,
+        specifically the qdrant_url for database endpoint
+        
+    Returns
+    -------
+    QdrantClient
+        Configured Qdrant client instance ready for database operations
+        
+    Examples
+    --------
+    >>> settings = Settings(qdrant_url="http://localhost:6333")
+    >>> client = get_qdrant_client(settings)
+    >>> # Client is now ready for vector operations
+    
+    Notes
+    -----
+    - The client connects to the Qdrant instance specified in settings.qdrant_url
+    - No authentication or connection validation is performed in this function
+    - The client supports both local and remote Qdrant instances
+    - Connection errors will be raised during actual database operations
+    """
     return QdrantClient(url=settings.qdrant_url)
 
 def recreate_collection_for_rag(client: QdrantClient, settings: Settings, vector_size: int):
@@ -32,10 +63,19 @@ def recreate_collection_for_rag(client: QdrantClient, settings: Settings, vector
     This function sets up a vector database collection with optimal configuration for
     semantic search, including HNSW indexing, payload indexing, and quantization.
     
-    Args:
-        client: Qdrant client instance for database operations
-        settings: Configuration object containing collection parameters
-        vector_size: Dimension of the embedding vectors (e.g., 384 for MiniLM-L6)
+    Parameters
+    ----------
+    client : QdrantClient
+        Qdrant client instance for database operations
+    settings : Settings
+        Configuration object containing collection parameters
+    vector_size : int
+        Dimension of the embedding vectors (e.g., 384 for MiniLM-L6)
+        
+    Returns
+    -------
+    None
+        Collection is created/recreated in the Qdrant database
         
     Collection Architecture:
     - Vector storage: Dense vectors for semantic similarity search
@@ -117,6 +157,65 @@ def recreate_collection_for_rag(client: QdrantClient, settings: Settings, vector
 
 
 def build_points(chunks: List[Document], embeds: List[List[float]]) -> List[PointStruct]:
+    """
+    Convert document chunks and embeddings into Qdrant PointStruct objects.
+    
+    Transforms LangChain Document objects and their corresponding embedding vectors
+    into Qdrant-compatible PointStruct format for database insertion. Extracts
+    metadata fields and structures payload data for optimal search and retrieval.
+    
+    Parameters
+    ----------
+    chunks : List[Document]
+        List of LangChain Document objects containing text content and metadata
+    embeds : List[List[float]]
+        List of embedding vectors corresponding to each document chunk,
+        must have same length as chunks list
+        
+    Returns
+    -------
+    List[PointStruct]
+        List of Qdrant PointStruct objects ready for database insertion,
+        each containing:
+        - id: Sequential integer starting from 1
+        - vector: Embedding vector for semantic search
+        - payload: Structured metadata and content
+        
+    Payload Structure
+    ----------------
+    Each PointStruct payload contains::
+    
+        {
+            "doc_id": Document metadata ID,
+            "source": Source document path/identifier,
+            "title": Document title (if available),
+            "lang": Language code (default: "en"),
+            "text": Document text content,
+            "trustability": Trust level (default: "untrusted"),
+            "filename": Source filename (if available),
+            "chunk_id": Zero-based chunk index
+        }
+    
+    Examples
+    --------
+    >>> documents = [Document(page_content="text", metadata={"source": "file.pdf"})]
+    >>> embeddings = [[0.1, 0.2, 0.3, ...]]  # Vector for the document
+    >>> points = build_points(documents, embeddings)
+    >>> len(points)
+    1
+    >>> points[0].id
+    1
+    >>> points[0].payload["text"]
+    "text"
+    
+    Notes
+    -----
+    - Point IDs are assigned sequentially starting from 1 for Qdrant compatibility
+    - Chunk IDs are zero-based for array indexing compatibility
+    - Missing metadata fields are handled with sensible defaults
+    - Trustability defaults to "untrusted" for security-conscious applications
+    - The payload structure is optimized for both full-text and metadata search
+    """
     pts: List[PointStruct] = []
     for i, (doc, vec) in enumerate(zip(chunks, embeds), start=1):
         payload = {
@@ -220,8 +319,58 @@ def qdrant_text_prefilter_ids(
     max_hits: int
 ) -> List[int]:
     """
-    Usa l'indice full-text su 'text' per prefiltrare i punti che contengono parole chiave.
-    Non restituisce uno score BM25: otteniamo un sottoinsieme di id da usare come boost.
+    Use full-text index to prefilter points containing query keywords.
+    
+    Leverages Qdrant's full-text search capabilities on the 'text' field to
+    identify document chunks that contain query keywords. This creates a subset
+    of relevant point IDs for hybrid search boosting without returning BM25 scores.
+    
+    Parameters
+    ----------
+    client : QdrantClient
+        Qdrant database client for search operations
+    settings : Settings
+        Configuration object containing collection name and parameters
+    query : str
+        Search query string for keyword matching
+    max_hits : int
+        Maximum number of point IDs to return for filtering
+        
+    Returns
+    -------
+    List[int]
+        List of Qdrant point IDs that contain query keywords,
+        limited to max_hits for performance optimization
+        
+    Search Strategy
+    --------------
+    The function uses Qdrant's MatchText filter to perform:
+    - Full-text search on indexed 'text' field
+    - Keyword-based relevance matching
+    - Efficient pagination for large result sets
+    - Memory-optimized ID collection (no vectors/payload)
+    
+    Implementation Details
+    ---------------------
+    - **Pagination**: Uses scroll API with 256-point batches for efficiency
+    - **Memory Optimization**: Retrieves only point IDs, not vectors or payload
+    - **Early Termination**: Stops when max_hits reached or no more results
+    - **Filter Strategy**: MatchText provides BM25-style keyword matching
+    
+    Examples
+    --------
+    >>> client = get_qdrant_client(settings)
+    >>> ids = qdrant_text_prefilter_ids(client, settings, "aircraft engine", 100)
+    >>> print(f"Found {len(ids)} documents containing keywords")
+    Found 45 documents containing keywords
+    
+    Notes
+    -----
+    - This function complements semantic search in hybrid retrieval
+    - Does not return BM25 scores, only binary keyword presence
+    - Used for boosting hybrid search results with text relevance
+    - Efficient for large collections due to indexed text search
+    - Results can be used to apply text_boost in score fusion
     """
 
     matched_ids: List[int] = []
@@ -255,14 +404,21 @@ def mmr_select(
     reducing redundancy and improving information coverage. This is particularly
     useful for RAG systems where diverse context provides better generation.
     
-    Args:
-        query_vec: Query embedding vector for relevance calculation
-        candidates_vecs: List of candidate document embedding vectors
-        k: Number of results to select
-        lambda_mult: MMR parameter balancing relevance vs. diversity (0.0 to 1.0)
+    Parameters
+    ----------
+    query_vec : List[float]
+        Query embedding vector for relevance calculation
+    candidates_vecs : List[List[float]]
+        List of candidate document embedding vectors
+    k : int
+        Number of results to select
+    lambda_mult : float
+        MMR parameter balancing relevance vs. diversity (0.0 to 1.0)
         
-    Returns:
-        List[int]: Indices of selected candidates in order of selection
+    Returns
+    -------
+    List[int]
+        Indices of selected candidates in order of selection
         
     MMR Algorithm Overview:
     
@@ -457,14 +613,21 @@ def hybrid_search(
     semantic understanding and traditional text search to provide high-quality,
     relevant results with minimal redundancy.
     
-    Args:
-        client: Qdrant client for database operations
-        settings: Configuration object containing search parameters
-        query: User's search query string
-        embeddings: Embedding model for semantic search (HuggingFace or Azure OpenAI)
+    Parameters
+    ----------
+    client : QdrantClient
+        Qdrant client for database operations
+    settings : Settings
+        Configuration object containing search parameters
+    query : str
+        User's search query string
+    embeddings : Union[HuggingFaceEmbeddings, AzureOpenAIEmbeddings]
+        Embedding model for semantic search (HuggingFace or Azure OpenAI)
         
-    Returns:
-        List[ScoredPoint]: Ranked list of relevant document chunks
+    Returns
+    -------
+    List[ScoredPoint]
+        Ranked list of relevant document chunks
         
     Hybrid Search Strategy Overview:
     
