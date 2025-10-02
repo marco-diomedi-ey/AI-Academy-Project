@@ -28,14 +28,14 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 **Purpose and Intended Use**:
     
-* The system orchestrates a multi-stage Retrieval-Augmented Generation (RAG) flow for aeronautic question answering, combining local FAISS-based retrieval with web research and markdown document generation.
+* The system orchestrates a multi-stage Retrieval-Augmented Generation (RAG) flow for aeronautic question answering, combining local Qdrant-based vector retrieval with optional FAISS integration, web research and markdown document generation.
 * Sector: technical documentation and knowledge assistance in aeronautics.
 * Problem: provide accurate, source-grounded answers and structured reports to user questions leveraging local indexed docs and current web insights.
 * Target users: engineers, analysts, and documentation specialists.
 * KPIs: RAGAS quality metrics (faithfulness, answer relevance, context recall/precision where applicable).
 * Ethical and regulatory considerations: transparency through citations, anti-hallucination via context-only generation, clear scope limitation to aeronautics via router validation.
 * Prohibited uses: decisions requiring certified compliance or safety-critical control without human review; non-aeronautics topics are filtered by the router.
-* Operational environment: executed via CLI on a workstation/server; depends on Azure OpenAI credentials and local FAISS indices; optional web access for research.
+* Operational environment: executed via CLI on a workstation/server; depends on Azure OpenAI credentials and local Qdrant indices, with optional FAISS usage; optional web access for research.
 
 
 ## Risk classification
@@ -130,9 +130,9 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 </div>
 
 * **Systems**:
-  * Dependencies: `crewai`, `langchain`, `langchain-openai`, `faiss-cpu`, `duckduckgo-search` (optional), `pydantic`, `pandas`, `python-dotenv`, `requests`, `ragas`.
-  * Data flow: user input → router (Azure GPT-4o) → RAG crew (`rag_system` + FAISS/Qdrant) → Web crew (Serper) → aggregation → Doc crew (markdown) → Bias crew (bias detection) → `output/*.md`.
-  * Error handling: retries in router LLM (max_retries=2); flow restarts on non-aeronautic questions via `@router` returning `retry`.
+  * Dependencies: `crewai`, `langchain`, `langchain-openai`, `faiss-cpu`, `duckduckgo-search` (optional), `pydantic`, `pandas`, `python-dotenv`, `requests`, `ragas`, `opik`.
+  * Data flow: user input → router (Azure GPT-4o) → RAG crew (`rag_system` + FAISS/Qdrant) → Web crew (Serper) → aggregation → Doc crew (markdown) → Bias crew (bias detection) → Opik metrics evaluation → `output/*.md`.
+  * Error handling: retries in router LLM (max_retries=2); flow restarts on non-aeronautic questions via `@router` returning `retry`; metric collection failures logged but do not interrupt main flow.
 
 ## Deployment Plan
 
@@ -141,9 +141,9 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
   * Scaling: N/A for CLI; schedule jobs if batch usage is desired.
   * Backup: version control FAISS indices and `output` artifacts as needed.
 * **Integration Steps**:
-  * Configure env vars; prepare FAISS/Qdrant indices; install dependencies; run `crewai run`.
-  * Dependencies pinned in `pyproject.toml`; optional `uv.lock` available.
-  * Rollback: revert environment or dependency versions; restore previous indices.
+  * Configure env vars including Opik API credentials for metrics collection; prepare FAISS/Qdrant indices; install dependencies; run `crewai run`.
+  * Dependencies pinned in `pyproject.toml` including `opik` for custom metrics evaluation; optional `uv.lock` available.
+  * Rollback: revert environment or dependency versions; restore previous indices; maintain metric evaluation history in Opik.
 * **User Information**: executed from terminal with interactive input prompt.
 
 
@@ -157,9 +157,11 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 * Monitoring: console logs from flow execution; optional enrichment via `verbose=True` crews; store outputs for review.
 * Versioning: `pyproject.toml` version; track FAISS index versions per folder.
 * **Metrics**:
-  * Application: N/A
-  * Model: RAGAS metrics when evaluating outputs considering faithfulness, answer relevance, context recall/precision where applicable.
-  * Infra: CPU/memory nominal for CLI; network latency to Azure.
+  * **Application:** Opik-based custom metrics tracking bias, toxicity, hallucination, and cross-agent consistency 
+  * **Model:** 
+    - RAGAS metrics: faithfulness, answer relevance, context recall/precision where applicable
+    - Custom Opik metrics: comprehensive evaluation across bias assessment, document quality, RAG analysis, web analysis, and system consistency
+  * **Infra:** CPU/memory nominal for CLI; network latency to Azure; metric collection and storage via Opik platform
 * **Key Activities**:
   * Review generated markdowns; monitor router false-negative/positive rates.
   * Refresh indices and upgrade dependencies periodically.
@@ -221,13 +223,28 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
   <p></p>
 </div>
 
-**Testing and Validation Procedures (Accuracy):** manual validation of sample aeronautic queries; compare outputs vs. source docs; use RAGAS scripts in `tools/refactored_faiss_code/ragas_scripts.py` when applicable.
+**Testing and Validation Procedures (Accuracy):** 
+* **Manual validation:** sample aeronautic queries tested against source documents
+* **RAGAS evaluation:**  automated quality assessment using scripts in `tools/refactored_faiss_code/ragas_scripts.py`
+* **Opik custom metrics:** comprehensive testing across all system components (bias detection, document quality, RAG analysis, web analysis, cross-agent consistency)
+* **Comparative analysis:** outputs validated against both local knowledge base and external web sources
 
-**Performance Metrics:** RAGAS quality metrics (faithfulness, answer relevance, context recall/precision where applicable).
+**Performance Metrics:** 
+* **RAGAS quality metrics:** faithfulness, answer relevance, context recall/precision where applicable
+* **Custom Opik metrics :**
+  * **Bias Assessment:** bias_result_answer_relevance, bias_result_hallucination, bias_result_moderation, bias_result_toxicity
+  * **Document Quality:** doc_result_answer_relevance, doc_result_hallucination, doc_result_moderation, doc_result_readability_score, doc_result_toxicity
+  * **RAG Analysis:** rag_analysis_answer_relevance, rag_analysis_moderation, rag_analysis_rule_hallucination, rag_analysis_toxicity
+  * **Web Analysis:** web_analysis_answer_moderation, web_analysis_answer_relevance, web_analysis_search_query_quality, web_analysis_toxicity
+  * **System Consistency:** cross_agent_consistency
 
 **Validation Results:** baseline runs generate structured markdown with cited sources; router filters off-topic queries effectively in tests.
 
-**Measures for Accuracy:** maintain high-quality indexed docs; periodic index refresh; prompt constraints to use retrieved context.
+**Measures for Accuracy:** 
+* **Data quality:** maintain high-quality indexed docs; periodic index refresh; curated document validation
+* **Model constraints:** prompt constraints to use retrieved context; temperature settings for deterministic outputs
+* **Continuous monitoring:** Opik metrics tracking for ongoing quality assessment; RAGAS evaluation for systematic validation
+
 
   
 ### Accuracy throughout the lifecycle
@@ -236,7 +253,11 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 
 **Model Selection and Optimisation:** fixed vendor-managed LLM (Azure GPT-4o); tune prompts and retrieval parameters (k, similarity threshold) in `rag_system`.
 
-**Feedback Mechanisms:** collect user feedback on generated docs; review failure cases and update indices/prompts accordingly.
+**Feedback Mechanisms:** 
+* **User feedback:** collect feedback on generated documents; track user satisfaction with outputs
+* **Automated evaluation:** continuous monitoring through Opik custom metrics; RAGAS-based quality assessment
+* **Failure analysis:** review cases where metrics indicate poor performance; update indices/prompts based on systematic evaluation
+
 
 ### Robustness 
 
@@ -262,7 +283,7 @@ EU AI Act <a href="https://artificialintelligenceact.eu/article/11/" style="colo
 </div>
 
 **Data Security:**
-* Store API keys in environment variables; avoid committing secrets; restrict access to FAISS indices
+* Store API keys in environment variables; avoid committing secrets; restrict access to vector indices
 * Trusted domains whitelist enforcement through YAML-based configuration
 * Document metadata trustability assessment (trusted/untrusted classification)
 * Input validation through dual router system preventing unauthorized queries
@@ -486,4 +507,4 @@ indication for, or on behalf of whom, that person signed, a signature.-->
 Based on internal application documentation template.
 
 ### Documentation Authors
-Fabio Rizzi, Giulia Pisano, Marco Diomedi, Roberto Gennaro Sciarrino, Riccardo Zuanetto
+Fabio Rizzi, Giulia Pisano, Marco Diomedi, Riccardo Zuanetto, Roberto Gennaro Sciarrino

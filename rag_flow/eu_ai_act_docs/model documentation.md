@@ -112,9 +112,19 @@ A face recognition model for personal photo apps → Limited risk
 The same model used for law enforcement → High or unacceptable risk
 
 
-Example Use Case: A university research team develops a machine learning model to predict the likelihood of hospital readmission among diabetic patients over the age of 65, using data from a regional healthcare network. The model is trained and validated specifically on this elderly population and is intended to support hospital planning and academic research. However, the team does not document the model’s intended use or demographic limitations. A health-tech company later integrates the model into a mobile app aimed at helping diabetes patients of all ages manage their care. The model performs poorly for younger users, frequently overestimating their risk of readmission. This leads to unnecessary anxiety, inappropriate self-care decisions, and false alerts to care providers. The misapplication draws criticism for lacking transparency, and regulators question the ethics of deploying a model outside its original context.   -->
+Example Use Case: A university research team develops a machine learning model to predict the likelihood of hospital readmission among diabetic patients over the age of 65, using data from a regional healthcare network. The model is trained and validated specifically on this elderly population and is intended to support hospital planning and academic research. However, the team does not document the model's intended use or demographic limitations. A health-tech company later integrates the model into a mobile app aimed at helping diabetes patients of all ages manage their care. The model performs poorly for younger users, frequently overestimating their risk of readmission. This leads to unnecessary anxiety, inappropriate self-care decisions, and false alerts to care providers. The misapplication draws criticism for lacking transparency, and regulators question the ethics of deploying a model outside its original context.   -->
 
-* Description
+**Primary Purpose:** The RAG Flow system is specifically designed and intended for **educational and research purposes** in the aeronautics domain. The model serves as a knowledge assistant to support:
+
+* **Technical documentation analysis** for aeronautic engineering concepts
+* **Research support** for academic and professional aeronautics studies  
+* **Educational content generation** with proper citations and source verification
+* **Knowledge synthesis** from trusted aeronautic sources (local documents + curated web content)
+
+**Target Users:** Engineers, researchers, students, and technical documentation specialists working in aeronautics who need accurate, source-grounded information with transparent citations.
+
+
+
 
 ### Domain(s) of use
 
