@@ -2,7 +2,7 @@
 from pydantic import BaseModel
 from crewai.flow import Flow, listen, start, router
 from rag_flow.crews.bias_crew.bias_crew import BiasCrew
-from rag_flow.crews.poem_crew.rag_crew import AeronauticRagCrew
+from rag_flow.crews.rag_crew.rag_crew import AeronauticRagCrew
 from rag_flow.crews.web_crew.web_crew import WebCrew
 from rag_flow.crews.doc_crew.doc_crew import DocCrew
 import os
