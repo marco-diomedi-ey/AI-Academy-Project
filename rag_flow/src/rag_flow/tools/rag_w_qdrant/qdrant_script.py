@@ -1,5 +1,4 @@
 from .config import Settings
-# from config import Settings
 
 import numpy as np
 from typing import List, Any, Tuple
@@ -90,25 +89,25 @@ def recreate_collection_for_rag(client: QdrantClient, settings: Settings, vector
         collection_name=settings.collection,
         vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
         hnsw_config=HnswConfigDiff(
-            m=32,             # grado medio del grafo HNSW (maggiore = più memoria/qualità)
-            ef_construct=256  # ampiezza lista candidati in fase costruzione (qualità/tempo build)
+            m=32,             
+            ef_construct=256  
         ),
         optimizers_config=OptimizersConfigDiff(
-            default_segment_number=2  # parallelismo/segmentazione iniziale
+            default_segment_number=2  
         ),
         quantization_config=ScalarQuantization(
-            scalar=ScalarQuantizationConfig(type="int8", always_ram=False)  # on-disk quantization dei vettori
+            scalar=ScalarQuantizationConfig(type="int8", always_ram=False)  
         ),
     )
 
-    # Indice full-text sul campo 'text' per filtri MatchText
+    
     client.create_payload_index(
         collection_name=settings.collection,
         field_name="text",
         field_schema=PayloadSchemaType.TEXT
     )
 
-    # Indici keyword per filtri esatti / velocità nei filtri
+    
     for key in ["doc_id", "source", "title", "lang"]:
         client.create_payload_index(
             collection_name=settings.collection,
@@ -160,9 +159,6 @@ def upsert_chunks(client: QdrantClient, settings: Settings, chunks: List[Documen
     points = build_points(chunks, vecs)
     client.upsert(collection_name=settings.collection, points=points, wait=True)
 
-# =========================
-# Ricerca: semantica / testuale / ibrida
-# =========================
 
 def qdrant_semantic_search(
     client: QdrantClient,
@@ -211,8 +207,8 @@ def qdrant_semantic_search(
         with_payload=True,
         with_vectors=with_vectors,
         search_params=SearchParams(
-            hnsw_ef=256,  # ampiezza lista in fase di ricerca (recall/latency)
-            exact=False   # True = ricerca esatta (lenta); False = ANN HNSW
+            hnsw_ef=256,  
+            exact=False   
         ),
     )
     return res.points
@@ -227,8 +223,7 @@ def qdrant_text_prefilter_ids(
     Usa l'indice full-text su 'text' per prefiltrare i punti che contengono parole chiave.
     Non restituisce uno score BM25: otteniamo un sottoinsieme di id da usare come boost.
     """
-    # Scroll con filtro MatchText per ottenere id dei match testuali
-    # (nota: scroll è paginato; qui prendiamo solo i primi max_hits per semplicità)
+
     matched_ids: List[int] = []
     next_page = None
     while True:
@@ -586,7 +581,6 @@ def hybrid_search(
     Updated to support both HuggingFaceEmbeddings and AzureOpenAIEmbeddings
     for improved flexibility with different embedding providers.
     """
-    # (1) semantica
     sem = qdrant_semantic_search(
         client, settings, query, embeddings,
         limit=settings.top_n_semantic, with_vectors=True
@@ -594,31 +588,26 @@ def hybrid_search(
     if not sem:
         return []
 
-    # (2) full-text prefilter (id)
     text_ids = set(qdrant_text_prefilter_ids(client, settings, query, settings.top_n_text))
 
-    # Normalizzazione score semantici per fusione
     scores = [p.score for p in sem]
     smin, smax = min(scores), max(scores)
-    def norm(x):  # robusto al caso smin==smax
+    def norm(x):  
         return 1.0 if smax == smin else (x - smin) / (smax - smin)
 
-    # (3) fusione con boost testuale
-    fused: List[Tuple[int, float, Any]] = []  # (idx, fused_score, point)
+
+    fused: List[Tuple[int, float, Any]] = []  
     for idx, p in enumerate(sem):
-        base = norm(p.score)                    # [0..1]
+        base = norm(p.score)                   
         fuse = settings.alpha * base
         if p.id in text_ids:
-            fuse += settings.text_boost         # boost additivo
+            fuse += settings.text_boost         
         fused.append((idx, fuse, p))
 
-    # ordina per fused_score desc
     fused.sort(key=lambda t: t[1], reverse=True)
 
-    # MMR opzionale per diversificare i top-K
     if settings.use_mmr:
         qv = embeddings.embed_query(query)
-        # prendiamo i primi N dopo fusione (es. 30) e poi MMR per final_k
         N = min(len(fused), max(settings.final_k * 5, settings.final_k))
         cut = fused[:N]
         vecs = [sem[i].vector for i, _, _ in cut]
@@ -626,5 +615,4 @@ def hybrid_search(
         picked = [cut[i][2] for i in mmr_idx]
         return picked
 
-    # altrimenti, prendi i primi final_k dopo fusione
     return [p for _, _, p in fused[:settings.final_k]]

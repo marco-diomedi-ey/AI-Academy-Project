@@ -3,9 +3,6 @@ from __future__ import annotations
 from dotenv import load_dotenv
  
 
-# =========================
-# Configurazione
-# =========================
 from crewai.tools import tool
 from .ragas_scripts import ragas_evaluation
 from .azure_connections import get_azure_embedding_model, get_llm 
@@ -18,17 +15,7 @@ from .qdrant_script import (
     upsert_chunks,
     hybrid_search
 )
-# from ragas_scripts import ragas_evaluation
-# from azure_connections import get_azure_embedding_model, get_llm 
-# from rag_structure import build_rag_chain
-# from config import Settings
-# from utils import  load_documents, split_documents, scan_docs_folder, SimpleRetriever, format_docs_for_prompt
-# from qdrant_script import (
-#     get_qdrant_client,
-#     recreate_collection_for_rag,
-#     upsert_chunks,
-#     hybrid_search
-# )
+
 import warnings
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -39,9 +26,6 @@ load_dotenv()
 SETTINGS = Settings()
 
 
-# =========================
-# Main end-to-end demo
-# =========================
 
 @tool('rag_system')
 def rag_system(question: str) -> str:
@@ -174,7 +158,6 @@ def rag_system(question: str) -> str:
     retriever = SimpleRetriever(client, s, embeddings)
 
     doc_folder = scan_docs_folder("src\\rag_flow\\tools\\rag_w_qdrant\\docs_test")
-    # doc_folder = scan_docs_folder("docs_test")
     docs = load_documents(doc_folder)  
     chunks = split_documents(docs, s)
 
@@ -188,8 +171,6 @@ def rag_system(question: str) -> str:
     if not hits:
         print("Nessun risultato.")
 
-    # for p in hits:
-    #     print(f"- id={p.id} score={p.score:.4f} src={p.payload.get('source')}")
 
     if llm:
         try:
@@ -198,7 +179,7 @@ def rag_system(question: str) -> str:
                 f.write(ctx)
             chain = build_rag_chain(llm)
             answer = chain.invoke({"question": q, "context": ctx})
-            # Domande per valutazione RAGAS basate sul documento aeronautica_guida.md
+
             questions = [
                 "Quali sono le principali compagnie aeree americane menzionate nel documento?",
                 "Che cos'è un Full Service Carrier (FSC) e quali caratteristiche ha?",
@@ -206,13 +187,8 @@ def rag_system(question: str) -> str:
                 "Quali autorità di certificazione sono responsabili per l'approvazione degli aeromobili?",
                 "Cosa significa SAF nel contesto della sostenibilità ambientale dell'aviazione?",
                 "Quali sono le due principali tipologie di test necessari per certificare un aereo?",
-                "Quali materiali vengono utilizzati nella costruzione della struttura di un aereo moderno?",
-                "Che cos'è il sistema fly-by-wire e a cosa serve?",
-                "Quali sono le principali compagnie aeree del Medio Oriente citate nel documento?",
-                "Quali tecnologie emergenti stanno influenzando il futuro del settore aeronautico?"
             ]
 
-            # Ground truth concise e valutative (non prescrittive)
             ground_truth = {
                 questions[0]: "American Airlines, Delta Air Lines, United Airlines, Southwest Airlines",
                 questions[1]: "Servizio completo con pasti inclusi, reti hub-and-spoke, classi multiple di servizio",
@@ -220,26 +196,17 @@ def rag_system(question: str) -> str:
                 questions[3]: "FAA, EASA, CAAC, Transport Canada",
                 questions[4]: "Sustainable Aviation Fuel - carburanti sostenibili",
                 questions[5]: "Test di volo e test a terra",
-                questions[6]: "Materiali compositi, leghe di alluminio, titanio",
-                questions[7]: "Sistema di controllo elettronico computerizzato per il volo",
-                questions[8]: "Emirates, Qatar Airways",
-                questions[9]: "Propulsione elettrica, AI e Machine Learning, Digital Twin, aerotaxi elettrici"
             }
             rag_eval = ragas_evaluation(
                 questions, chain, llm, embeddings, retriever, s, ground_truth
             )
-            # rag_eval = ragas_evaluation(
-            #     question, chain, llm, embeddings, retriever, s
-            # )
+
             print("\n METRICHE OTTENUTE:\n", rag_eval)
             rag_eval.to_json("output/rag_eval_results.json", orient="records", lines=True)
-            # rag_eval.to_json("rag_eval_results.json", orient="records", lines=True)
             return answer
         except Exception as e:
             print(f"\nLLM generation failed: {e}")
             print("Falling back to content display...")
-            # print("\nContenuto recuperato:\n")
-            # print(format_docs_for_prompt(hits))
             print()
     else:
         print("LLM not available")

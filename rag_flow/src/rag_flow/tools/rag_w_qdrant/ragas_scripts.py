@@ -2,18 +2,16 @@ from typing import List
 
 from ragas import EvaluationDataset, evaluate
 from ragas.metrics import \
-    answer_correctness  # usa questa solo se hai ground_truth
+    answer_correctness  
 from ragas.metrics import \
-    answer_relevancy, AnswerRelevancy  # pertinenza della risposta vs domanda
+     AnswerRelevancy  
 from ragas.metrics import \
-    context_precision  # "precision@k" sui chunk recuperati
-from ragas.metrics import context_recall  # copertura dei chunk rilevanti
-from ragas.metrics import faithfulness  # ancoraggio della risposta al contesto
+    context_precision  
+from ragas.metrics import context_recall  
+from ragas.metrics import faithfulness  
 
 from .rag_structure import get_contexts_for_question
 from .utils import Settings
-# from rag_structure import get_contexts_for_question
-# from utils import Settings
 
 def format_contexts_for_chain(contexts_with_metadata: List[dict]) -> str:
     """
@@ -95,16 +93,14 @@ def build_ragas_dataset(
     for q in questions:
         contexts_with_metadata = get_contexts_for_question(retriever, q, k)
         # answer = chain.invoke(q) SCOMMENTA PER FAISS
-        ctx = format_contexts_for_chain(contexts_with_metadata)  # Formatta per la chain
+        ctx = format_contexts_for_chain(contexts_with_metadata)  
         answer = chain.invoke({"question": q, "context": ctx})
 
-        # Estrai solo il contenuto per RAGAS (che si aspetta List[str])
         contexts_for_ragas = [ctx_meta['content'] for ctx_meta in contexts_with_metadata]
 
         row = {
-            # chiavi richieste da molte metriche Ragas
             "user_input": q,
-            "retrieved_contexts": contexts_for_ragas,  # RAGAS vuole List[str]
+            "retrieved_contexts": contexts_for_ragas,  
             "response": answer,
         }
         if ground_truth and q in ground_truth:
@@ -129,24 +125,20 @@ def ragas_evaluation(
 
     evaluation_dataset = EvaluationDataset.from_list(dataset)
     ar = AnswerRelevancy(strictness=1)
-    # 7) Scegli le metriche
     metrics = [
             context_precision,
            context_recall,
         faithfulness,
         ar,
     ]
-    # Aggiungi correctness solo se tutte le righe hanno reference
     if all("reference" in row for row in dataset):
         metrics.append(answer_correctness)
 
-    # 8) Esegui la valutazione con il TUO LLM e le TUE embeddings
     ragas_result = evaluate(
         dataset=evaluation_dataset,
         metrics=metrics,
-        llm=llm,  # passa l'istanza LangChain del tuo LLM (LM Studio)
+        llm=llm,  
         embeddings=embeddings,
-        # ground_truth = ground_truth  # o riusa 'embeddings' creato sopra
     )
 
     df = ragas_result.to_pandas()

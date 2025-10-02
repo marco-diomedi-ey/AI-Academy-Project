@@ -20,13 +20,12 @@ os.environ["PYTHONHTTPSVERIFY"] = "0"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
 
-# Track CrewAI runs with Opik
 track_crewai(project_name="culinary_rag_flow") 
 
-#load_dotenv()  # Carica le variabili d'ambiente dal file .env 
+
 endpoint = os.getenv("AZURE_API_BASE")
 key = os.getenv("AZURE_API_KEY")
-deployment_name = os.getenv("MODEL")  # nome deployment modello completions
+model_name = os.getenv("AZURE_MODEL")  
 api_version=os.getenv("AZURE_API_VERSION", "2024-06-01")
 
 
@@ -60,7 +59,7 @@ class AeronauticRagState(BaseModel):
     all_results: str = ""
     document: str = ""
     final_doc: str = ""
-    rag_context: str = ""  # Nuovo campo per ctx
+    rag_context: str = ""  
 
 class AeronauticRagFlow(Flow[AeronauticRagState]):
     """
@@ -137,6 +136,8 @@ class AeronauticRagFlow(Flow[AeronauticRagState]):
         The captured question will be validated for aeronautic relevance in
         the next flow stage.
         """
+        question = input("Enter your question about aeronautics: ")
+        self.state.question_input = question
        
 
     @router(generate_question)
@@ -180,8 +181,8 @@ class AeronauticRagFlow(Flow[AeronauticRagState]):
         off-topic questions early in the pipeline.
         """
         llm = AzureChatOpenAI(
-            azure_deployment="gpt-4o",  # or your deployment
-        api_version=api_version,  # or your api version
+            azure_deployment=model_name,  
+        api_version=api_version,  
         temperature=0,
         max_retries=2,
         ) 
@@ -241,11 +242,10 @@ class AeronauticRagFlow(Flow[AeronauticRagState]):
         off-topic questions early in the pipeline.
         """
         llm = AzureChatOpenAI(
-            azure_deployment="gpt-4o",  # or your deployment
-        api_version=api_version,  # or your api version
+            azure_deployment=model_name,  
+        api_version=api_version,  
         temperature=0,
         max_retries=2,
-        # other params...
         ) 
         messages=[{"role": "system", "content":
                 """You are an ethical AI expert specialized in content moderation. 
@@ -377,7 +377,6 @@ class AeronauticRagFlow(Flow[AeronauticRagState]):
         payload['web_result'] = result.raw
         payload['web_crew'] = web_crew
         return payload
-        # Here you can add more processing of the rag_result if needed
     
     @listen(web_analysis)
     def aggregate_results(self, payload:Dict[str, Any]):
@@ -555,8 +554,6 @@ def kickoff():
     of the aeronautic question-answering system.
     """
     aeronautic_rag_flow = AeronauticRagFlow()
-    question = input("Inserisci la tua domanda aeronautica: ")
-    aeronautic_rag_flow.state.question_input = question
     aeronautic_rag_flow.kickoff()
 
 

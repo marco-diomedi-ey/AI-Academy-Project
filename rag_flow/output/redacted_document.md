@@ -1,59 +1,83 @@
 ```markdown
-# Le Maggiori Compagnie Aeree Mondiali Divise per Regione
+# Le Maggiori Compagnie Aeree Suddivise per Area Geografica
+
+Le compagnie aeree più grandi e riconosciute operano in diverse aree del mondo, offrendo servizi che variano tra compagnie tradizionali, luxury e low-cost. Di seguito una classificazione per area geografica.
+
+---
 
 ## Compagnie Americane
-- **American Airlines**: Tra le più grandi compagnie aeree al mondo per numero di passeggeri trasportati, dimensione della flotta e ricavi. La sede della compagnia è situata a Fort Worth, Texas, negli Stati Uniti.  
-  [Fonte](https://it.wikipedia.org/wiki/American_Airlines)  
 
-- **Delta Air Lines**: Riconosciuta per l'innovazione e la cura del servizio clienti, si caratterizza per un'ampia rete di rotte e presenza nei mercati globali.  
+- **American Airlines**  
+  È una delle compagnie aeree più grandi del mondo sia per dimensione della flotta che per passeggeri trasportati. Ha sede a Fort Worth, Texas, ed è gestita dall'American Airlines Group. Si distingue per ricavi e un'ampia gamma di destinazioni.  
+  [Fonte: Wikipedia - American Airlines](https://it.wikipedia.org/wiki/American_Airlines)
 
-- **United Airlines**: Compagnia con forte presenza internazionale e hub strategici che garantiscono operazioni estese.  
-  [Fonte](https://it.wikipedia.org/wiki/Compagnie_aeree_pi%C3%B9_grandi_del_mondo)  
+- **Delta Air Lines**  
+  Con un'importante rete di collegamenti internazionali e domestici, è una compagnia statunitense di rilievo, nota per il servizio clienti e l'innovazione nel settore aeronautico.
 
-- **Southwest Airlines**: Uno dei pionieri del modello low-cost, con un'attenzione particolare verso l'accessibilità e l'efficienza operativa per il mercato domestico americano.  
+- **United Airlines**  
+  Grazie alla sua vasta rete di hub strategici, offre una solida presenza internazionale ed è una delle principali compagnie statunitensi.
+
+- **Southwest Airlines**  
+  È un'azienda nota per aver popolarizzato il modello low-cost, offrendo tariffe competitive e operando un elevato numero di voli domestici.
 
 ---
 
 ## Compagnie Europee
-- **Lufthansa**: La maggiore compagnia aerea tedesca, parte di un gruppo con una presenza significativa in Europa.  
-  [Fonte](https://it.wikipedia.org/wiki/Compagnie_aeree_pi%C3%B9_grandi_del_mondo)  
 
-- **Air France-KLM**: Alleanza tra Francia e Paesi Bassi con hub strategici a Parigi e Amsterdam per una copertura internazionale.  
+- **Lufthansa**  
+  Il gruppo tedesco ha una forte presenza in Europa e a livello internazionale, con hub principali a Francoforte e Monaco di Baviera.
 
-- **British Airways**: Compagnia di bandiera del Regno Unito nota per la sua lunga storia e il suo ruolo nel mercato globale.  
+- **Air France-KLM**  
+  L'alleanza franco-olandese opera con due importanti hub a Parigi (Charles de Gaulle) e Amsterdam (Schiphol), coprendo numerose tratte intercontinentali.
 
-- **Ryanair**: Una delle principali compagnie low-cost in Europa, che punta su tariffe competitive e un'elevata frequenza di voli.  
+- **British Airways**  
+  È la compagnia di bandiera del Regno Unito e offre una vasta gamma di voli intercontinentali e regionali con particolare attenzione al servizio.
 
-- **EasyJet**: Seconda compagnia low-cost europea, che si concentra su semplicità e convenienza per i viaggiatori.  
+- **Ryanair**  
+  Leader nel segmento low-cost europeo, serve un numero considerevole di rotte a tariffe competitive.
+
+- **EasyJet**  
+  Anche essa operante nel settore low-cost europeo, offre una vasta rete di collegamenti puntando su efficienza e prezzi accessibili.
 
 ---
 
 ## Compagnie Asiatiche e del Medio Oriente
-- **Emirates**: Compagnia aerea con base a Dubai, apprezzata per la sua flotta moderna e servizi orientati al comfort del cliente.  
-  [Fonte](https://it.wikipedia.org/wiki/Compagnie_aeree_pi%C3%B9_grandi_del_mondo)  
 
-- **Qatar Airways**: Compagnia aerea del Qatar, conosciuta per l'alto livello di operatività e qualità nei servizi.  
+- **Emirates**  
+  Basata a Dubai, si è affermata come compagnia internazionale di lusso con una flotta moderna e una copertura globale.
 
-- **Singapore Airlines**: Famosa per l'eccellenza nel servizio, rappresenta un punto di riferimento per l'industria aeronautica.  
+- **Qatar Airways**  
+  Compagnia del Qatar nota per il comfort e gli alti standard di servizio, operante da Doha come hub principale.
 
-- **Cathay Pacific**: Con sede a Hong Kong, utilizza il suo hub strategico per connessioni tra Asia e il resto del mondo.  
+- **Singapore Airlines**  
+  Apprezzata per il servizio clienti, è considerata tra le compagnia migliori a livello globale.
 
-- **ANA (All Nippon Airways)**: Compagnia aerea giapponese apprezzata per efficienza e qualità nei servizi.  
+- **Cathay Pacific**  
+  Con sede a Hong Kong, è un'importante compagnia internazionale con un hub strategico nella regione.
+
+- **ANA (All Nippon Airways)**  
+  La compagnia giapponese si distingue per alta qualità del servizio, puntualità e sicurezza.
 
 ---
 
 ## Compagnie Italiane
-- **ITA Airways**: La nuova compagnia aerea di bandiera italiana, creata per succedere alle compagnie precedenti.  
 
-- **Ryanair**: Importante presenza in Italia, segue lo stesso modello low-cost che caratterizza le sue operazioni in Europa.  
+- **ITA Airways**  
+  La nuova compagnia di bandiera italiana, nata per sostituire Alitalia, si propone di riconquistare il mercato con un focus su qualità e sostenibilità.
 
----
-
-## Altre Informazioni Rilevanti
-- **Aereo più diffuso al mondo**: Il Boeing *737* è il modello commerciale più venduto e utilizzato. La sua diffusione è considerata una testimonianza del design efficace e dell'affidabilità nel settore aeronautico globale.  
-  [Fonte](https://it.wikipedia.org/wiki/Boeing_737)  
+- **Ryanair**  
+  Pur essendo irlandese, è inclusa qui per via della forte presenza nel mercato aereo italiano, dove opera numerose rotte nazionali e internazionali a basso costo.
 
 ---
 
-Questa panoramica presenta le principali compagnie aeree mondiali suddivise per regione, mettendo in evidenza caratteristiche distintive e il loro impatto sul trasporto aereo internazionale. Le informazioni sono basate su fonti affidabili e forniscono uno sguardo sulle dinamiche globali del settore.  
+## Approfondimenti
+
+Per ulteriori dettagli sulle classifiche delle maggiori compagnie aeree per passeggeri trasportati, reddito generato e dimensione della flotta, si può consultare [Wikipedia - Compagnie aeree più grandi del mondo](https://it.wikipedia.org/wiki/Compagnie_aeree_pi%C3%B9_grandi_del_mondo).
+
+---
+
+### Fonti  
+- [American Airlines - Wikipedia](https://it.wikipedia.org/wiki/American_Airlines)  
+- [Compagnie aeree più grandi del mondo - Wikipedia](https://it.wikipedia.org/wiki/Compagnie_aeree_pi%C3%B9_grandi_del_mondo)  
+- Documento originale: `guida_aeronautica.md`
 ```

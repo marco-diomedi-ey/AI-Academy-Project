@@ -99,9 +99,6 @@ class Settings:
     - 50% overlap: ~50% increase in storage
     """
     vector_size: int = 1536
-    # =========================
-    # Hybrid Search Configuration
-    # =========================
     top_n_semantic: int = 30
     """
     Number of top semantic search candidates to retrieve initially.
@@ -138,7 +135,6 @@ class Settings:
     """
     
     final_k: int = 6
-    # k: int = 6
     """
     Final number of results to return after all processing steps.
     
@@ -195,9 +191,6 @@ class Settings:
     - Factual queries: 0.10-0.20
     """
     
-    # =========================
-    # MMR (Maximal Marginal Relevance) Configuration
-    # =========================
     use_mmr: bool = True
     """
     Whether to use MMR for result diversification and redundancy reduction.
@@ -239,9 +232,6 @@ class Settings:
     - Increase if results seem too diverse
     """
     
-    # =========================
-    # LLM Configuration (Optional)
-    # =========================
     lm_base_env: str = "OPENAI_BASE_URL"
     """
     Environment variable name for LLM service base URL.

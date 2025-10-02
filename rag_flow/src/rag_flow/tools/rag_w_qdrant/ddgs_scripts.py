@@ -6,7 +6,6 @@ from langchain.schema import Document
 from langchain_community.document_loaders import WebBaseLoader
 
 from .utils import clean_web_content
-# from utils import clean_web_content
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -46,12 +45,11 @@ def ddgs_results(query: str, max_results: int = 5):
     processing. Full result metadata (titles, descriptions) are logged
     but not returned in the output.
     """
-    print(f"🔍 DDGS: Ricerca per '{query}' (max {max_results} risultati)")
+    print(f"DDGS: Ricerca per '{query}' (max {max_results} risultati)")
 
     try:
-        # DDGS con SSL bypass
         with DDGS(
-            verify=False,  # ← BYPASSA SSL
+            verify=False,  
             timeout=20,
             headers={"User-Agent": "Mozilla/5.0 (compatible; DDGSBot/1.0)"},
         ) as ddgs:
@@ -62,13 +60,12 @@ def ddgs_results(query: str, max_results: int = 5):
                     max_results=max_results,
                     region="us-en",
                     safesearch="moderate",
-                    timelimit=None,  # Risultati dell'ultimo anno
+                    timelimit=None,  
                 )
             )
 
-        print(f"   ✅ {len(results)} risultati trovati")
+        print(f"   {len(results)} risultati trovati")
 
-        # Formatta per compatibilità con il resto del codice
         formatted = []
         for i, result in enumerate(results, 1):
             formatted.append(result.get("href", ""))
@@ -77,7 +74,7 @@ def ddgs_results(query: str, max_results: int = 5):
         return formatted
 
     except Exception as e:
-        print(f"❌ Errore DDGS: {e}")
+        print(f"Errore DDGS: {e}")
         return []
 
 
@@ -128,10 +125,9 @@ def web_search_and_format(path: str):
     - Minimum content length threshold of 100 characters
     - All results include source URL in metadata for citation purposes
     """
-    print(f"🌐 Caricamento contenuto da: {path}")
+    print(f"Caricamento contenuto da: {path}")
 
     try:
-        # Strategia 1: Selettori CSS specifici per il contenuto principale
         content_selectors = [
             {"name": "article", "elements": ["article"]},
             {"name": "main-content", "elements": ["main", ".main", "#main"]},
@@ -153,7 +149,7 @@ def web_search_and_format(path: str):
         valid_docs = []
 
         for selector_group in content_selectors:
-            if valid_docs:  # Se abbiamo già trovato contenuto valido, fermati
+            if valid_docs:  
                 break
 
             try:
@@ -166,60 +162,47 @@ def web_search_and_format(path: str):
 
                 docs = loader.load()
                 print(
-                    f"   🔍 Tentativo con selettori {selector_group['name']}: {len(docs)} documenti"
+                    f"Tentativo con selettori {selector_group['name']}: {len(docs)} documenti"
                 )
 
                 for doc in docs:
-                    # Pulisci il contenuto
                     cleaned_content = clean_web_content(doc.page_content)
 
-                    # Verifica che il contenuto pulito sia significativo
                     if (
                         len(cleaned_content.strip()) > 100
-                    ):  # Almeno 100 caratteri dopo pulizia
-                        # Aggiorna il documento con contenuto pulito
+                    ):  
                         doc.page_content = cleaned_content
                         valid_docs.append(doc)
                         print(
-                            f"   ✅ Contenuto valido trovato: {len(cleaned_content)} caratteri puliti"
+                            f"Contenuto valido trovato: {len(cleaned_content)} caratteri puliti"
                         )
                         break
 
             except Exception as e:
-                print(f"   ⚠️ Errore con selettori {selector_group['name']}: {e}")
+                print(f"Errore con selettori {selector_group['name']}: {e}")
                 continue
 
-        # Strategia 2: Se non abbiamo trovato nulla, prova senza filtri ma pulisci di più
         if not valid_docs:
-            print("   🔄 Nessun contenuto valido trovato, provo senza filtri CSS...")
+            print("Nessun contenuto valido trovato, provo senza filtri CSS...")
             try:
                 loader = WebBaseLoader(web_paths=(path,))
                 docs = loader.load()
 
                 for doc in docs:
-                    # Pulizia aggressiva per contenuto non filtrato
                     cleaned_content = clean_web_content(doc.page_content)
 
-                    # Rimozione aggiuntiva per contenuto non filtrato
                     lines = cleaned_content.split("\n")
                     content_lines = []
 
                     for line in lines:
                         line = line.strip()
-                        # # Mantieni solo linee con contenuto sostanziale
-                        # if (
-                        #     len(line) > 30
-                        #     and not re.match(r"^[A-Z\s]+$", line)  # Non solo maiuscole
-                        #     and not re.match(r"^\d+$", line)  # Non solo numeri
-                        #     and len(line.split()) > 3
-                        # ):  # Almeno 4 parole
                         content_lines.append(line)
 
                     final_content = " ".join(content_lines)
 
                     if (
                         len(final_content.strip()) > 150
-                    ):  # Standard più alto per contenuto non filtrato
+                    ):  
                         doc.page_content = final_content
                         valid_docs.append(doc)
                         print(
@@ -230,7 +213,6 @@ def web_search_and_format(path: str):
             except Exception as e:
                 print(f"Errore anche senza filtri: {e}")
 
-        # Verifica finale e fallback
         if not valid_docs:
             print("Impossibile estrarre contenuto significativo")
             return [
@@ -240,7 +222,6 @@ def web_search_and_format(path: str):
                 )
             ]
 
-        # Mostra preview del contenuto pulito
         for i, doc in enumerate(valid_docs):
             preview = doc.page_content[:200].replace("\n", " ")
             print(f"Preview contenuto {i+1}: '{preview}...'")

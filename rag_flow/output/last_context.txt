@@ -92,38 +92,13 @@ India e Israele: Investimenti crescenti in tecnologie autonome, cyberdifesa e dr
 
 Investimenti Globali e Europei 
 
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Fattori Chiave di Successo
-
-Gestione dei costi operativi
-
-Ottimizzazione della rete di rotte
-
-Gestione del revenue management
-
-Manutenzione e sicurezza
-
-Esperienza del passeggero
-
-Sostenibilità ambientale
-
-✈️ Fattori per la Creazione di un Aereo
-
-1. Progettazione e Ingegneria
-
-Aerodinamica
-
-Profilo alare: Ottimizzazione per portanza ed efficienza
-
-Fusoliera: Design per ridurre la resistenza aerodinamica
-
-Stabilità: Controllo di volo e manovrabilità
-
-CFD (Computational Fluid Dynamics): Simulazioni avanzate
-
-Struttura
-
-Materiali compositi: Fibra di carbonio per leggerezza e resistenza
-
-Leghe di alluminio: Tradizionali ma ancora utilizzate
-
-Titanio: Per componenti critici ad alta temperatura 
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\Il_regno_animale.pdf][trustability: trusted] portatori di buona fortuna. 
+La Tartaruga Supersonica 
+Non tutte le tartarughe sono lente. Alcune specie, conosciute come tartarughe supersoniche, 
+possono raggiungere velocità fino a 500 km/h. Queste tartarughe vengono spesso utilizzate per 
+consegnare messaggi tra branchi di animali remoti, grazie alla loro capacità di volare per brevi tratti 
+con un ronzio musicale che disorienta i predatori. La loro esistenza è stata confermata da numerosi 
+documentari naturalistici non ufficiali, che hanno catturato immagini di tartarughe in rapido 
+movimento. 
+Il Cavallo Multicolore 
+In certe praterie nascoste, esistono cavalli che cambiano colore in base al loro stato emotivo. Un 

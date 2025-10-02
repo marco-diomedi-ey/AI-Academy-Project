@@ -6,7 +6,6 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
 from .azure_connections import get_llm
-# from azure_connections import get_llm
 
 
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -45,11 +44,10 @@ def get_contexts_for_question(retriever, question: str, k: int) -> List[dict]:
     docs = retriever.invoke(question)[:k]
     contexts_with_metadata = []
     for doc in docs:
-        # Estrai nome file dalla source se disponibile
         source = "unknown"
         if hasattr(doc, 'metadata') and doc.metadata:
             if 'source' in doc.metadata:
-                source = doc.metadata['source'].split('\\')[-1].split('/')[-1]  # Solo nome file
+                source = doc.metadata['source'].split('\\')[-1].split('/')[-1]  
             elif 'file_path' in doc.metadata:
                 source = doc.metadata['file_path'].split('\\')[-1].split('/')[-1]
         
@@ -87,7 +85,7 @@ def build_rag_chain(llm):
 
     chain = (
         {
-            "context": RunnablePassthrough(),  # stringa già formattata
+            "context": RunnablePassthrough(),  
             "question": RunnablePassthrough(),
         }
         | prompt

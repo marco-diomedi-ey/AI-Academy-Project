@@ -7,8 +7,6 @@ from langchain_community.vectorstores import FAISS
 
 from .azure_connections import get_azure_embedding_model
 from .utils import Settings, split_documents
-# from azure_connections import get_azure_embedding_model
-# from utils import Settings, split_documents
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -42,7 +40,6 @@ def build_faiss_vectorstore(
     The function creates the persist directory if it doesn't exist and
     automatically saves the vector store using FAISS's save_local method.
     """
-    # Determina la dimensione dell'embedding
     vs = FAISS.from_documents(documents=chunks, embedding=embeddings)
 
     Path(persist_dir).mkdir(parents=True, exist_ok=True)

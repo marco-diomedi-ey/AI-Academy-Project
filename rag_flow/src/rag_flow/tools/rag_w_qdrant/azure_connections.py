@@ -7,7 +7,6 @@ from langchain_openai.chat_models import AzureChatOpenAI
 from langchain_openai import AzureOpenAIEmbeddings
 
 from .utils import Settings
-# from utils import Settings
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
