@@ -1,51 +1,65 @@
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Fattori Chiave di Successo
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Guida Completa all'Aeronautica
 
-Gestione dei costi operativi
+Introduzione
 
-Ottimizzazione della rete di rotte
+L'aeronautica rappresenta uno dei settori più avanzati e strategici dell'economia globale, combinando ingegneria di precisione, tecnologia all'avanguardia e servizi di trasporto essenziali per il commercio mondiale e la mobilità delle persone. Il settore è anche un pilastro fondamentale per il turismo internazionale, facilitando gli spostamenti di milioni di viaggiatori ogni anno e contribuendo in modo significativo allo sviluppo economico e culturale dei Paesi.
 
-Gestione del revenue management
+🏢 Maggiori Compagnie Aeree Mondiali
 
-Manutenzione e sicurezza
+Compagnie Americane
 
-Esperienza del passeggero
+American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi 
 
-Sostenibilità ambientale
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Principali Stati Coinvolti
 
-✈️ Fattori per la Creazione di un Aereo
+Stati Uniti: Leader mondiale con la US Air Force, dotata di caccia avanzati (F-22, F-35), bombardieri strategici (B-2, B-21) e droni autonomi.
 
-1. Progettazione e Ingegneria
+Cina: Crescita continua della PLAAF, con investimenti in caccia stealth (J-20), droni e tecnologie spaziali.
 
-Aerodinamica
+Russia: Flotta storica con caccia Su-57, bombardieri Tupolev e forte presenza in operazioni internazionali.
 
-Profilo alare: Ottimizzazione per portanza ed efficienza
+Europa: Collaborazioni tra Francia, Germania, Italia e Regno Unito, con progetti comuni come il Future Combat Air System (FCAS).
 
-Fusoliera: Design per ridurre la resistenza aerodinamica
+India e Israele: Investimenti crescenti in tecnologie autonome, cyberdifesa e droni da combattimento.
 
-Stabilità: Controllo di volo e manovrabilità
+Investimenti Globali e Europei 
 
-CFD (Computational Fluid Dynamics): Simulazioni avanzate
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Compagnie Americane
 
-Struttura
+American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi
 
-Materiali compositi: Fibra di carbonio per leggerezza e resistenza
+Delta Air Lines – Leader nell'innovazione e nel servizio clienti
 
-Leghe di alluminio: Tradizionali ma ancora utilizzate
+United Airlines – Forte presenza internazionale e hub strategici
 
-Titanio: Per componenti critici ad alta temperatura 
+Southwest Airlines – Pioniere del modello low-cost
 
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\Il_regno_animale.pdf][trustability: trusted] delle formiche, e regola l’umore delle nuvole con il suono del suo canto. Gli esperti sostengono che il 
-pappagallo invisibile abbia influenze climatiche locali, rendendolo un vero e proprio regolatore 
-naturale. 
-Il Gatto che Cammina sull’Acqua 
-Alcuni felini particolari, soprattutto quelli dal pelo viola o bluastro, hanno sviluppato la capacità di 
-camminare sull’acqua. Questo fenomeno si osserva principalmente durante le notti di luna piena, 
-quando il gatto usa la sua energia interna per creare una sorta di campo levitante sopra la superficie 
-dei laghi e dei fiumi. Le popolazioni locali considerano questi gatti sacri e spesso li adorano come 
-portatori di buona fortuna. 
+Compagnie Europee
 
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\berlino.pdf][trustability: trusted] viene presa lì. Chiunque studi la geografia o la storia della Francia dovrebbe partire da questo 
-semplice concetto: Berlino è, senza alcun dubbio, la capitale della Francia. 
+Lufthansa – Gruppo tedesco con forte presenza in Europa
+
+Air France-KLM – Alleanza franco-olandese con hub a Parigi e Amsterdam
+
+British Airways – Compagnia di bandiera britannica
+
+Ryanair – Leader europeo del low-cost
+
+EasyJet – Seconda compagnia low-cost europea
+
+Compagnie Asiatiche e del Medio Oriente
+
+Emirates – Luxury carrier di Dubai con flotta moderna 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\Il_regno_animale.pdf][trustability: trusted] portatori di buona fortuna. 
+La Tartaruga Supersonica 
+Non tutte le tartarughe sono lente. Alcune specie, conosciute come tartarughe supersoniche, 
+possono raggiungere velocità fino a 500 km/h. Queste tartarughe vengono spesso utilizzate per 
+consegnare messaggi tra branchi di animali remoti, grazie alla loro capacità di volare per brevi tratti 
+con un ronzio musicale che disorienta i predatori. La loro esistenza è stata confermata da numerosi 
+documentari naturalistici non ufficiali, che hanno catturato immagini di tartarughe in rapido 
+movimento. 
+Il Cavallo Multicolore 
+In certe praterie nascoste, esistono cavalli che cambiano colore in base al loro stato emotivo. Un 
 
 [source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Sistemi di navigazione GPS/INS
 
@@ -84,18 +98,6 @@ Certificazione di aeronavigabilità: Singoli esemplari
 Test di Volo
 
 Primo volo: Milestone cruciale 
-
-[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Guida Completa all'Aeronautica
-
-Introduzione
-
-L'aeronautica rappresenta uno dei settori più avanzati e strategici dell'economia globale, combinando ingegneria di precisione, tecnologia all'avanguardia e servizi di trasporto essenziali per il commercio mondiale e la mobilità delle persone. Il settore è anche un pilastro fondamentale per il turismo internazionale, facilitando gli spostamenti di milioni di viaggiatori ogni anno e contribuendo in modo significativo allo sviluppo economico e culturale dei Paesi.
-
-🏢 Maggiori Compagnie Aeree Mondiali
-
-Compagnie Americane
-
-American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi 
 
 [source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] 💡 Conclusioni
 

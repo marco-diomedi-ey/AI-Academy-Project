@@ -3,10 +3,11 @@ import streamlit as st
 from pydantic import BaseModel
 from crewai.flow import Flow, listen, start, router
 from rag_flow.crews.bias_crew.bias_crew import BiasCrew
-from rag_flow.crews.poem_crew.rag_crew import AeronauticRagCrew
+from rag_flow.crews.rag_crew.rag_crew import AeronauticRagCrew
 from rag_flow.crews.web_crew.web_crew import WebCrew
 from rag_flow.crews.doc_crew.doc_crew import DocCrew
 import os
+import pandas as pd
 import time
 from dotenv import load_dotenv
 from langchain_openai import AzureChatOpenAI
@@ -14,8 +15,7 @@ from typing import Dict, Any
 from opik import configure 
 from opik.integrations.crewai import track_crewai 
 import json
-from datetime import datetime 
-import streamlit.components.v1
+
 
 # Carica le variabili d'ambiente
 load_dotenv()
@@ -60,7 +60,7 @@ os.environ["SSL_VERIFY"] = "false"
 os.environ["PYTHONHTTPSVERIFY"] = "0"
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
-track_crewai(project_name="culinary_rag_flow")
+track_crewai(project_name="final-project")
 
 # Configurazione pagina Streamlit
 st.set_page_config(
@@ -452,7 +452,9 @@ with st.sidebar:
 
 # Main content
 st.title("Aeronautic RAG Question Answering System")
-st.markdown("Sistema avanzato di risposta a domande aeronautiche con validazione etica e controllo bias")
+st.markdown("""Sistema avanzato di risposta a domande aeronautiche con validazione etica e controllo bias.""")
+st.markdown("""La risposta è stata generata dall'IA, sfruttando una knowledge base locale e una ricerca online in tempo reale,  \
+potrebbe mostrare informazioni imprecise. Verifica sempre le risposte sulla documentazione originale.""")
 
 # Tabs per organizzare l'interfaccia
 tab1, tab2, tab3 = st.tabs([
@@ -565,24 +567,43 @@ with tab1:
                             st.markdown("## :material/finance: Quality Metrics")
                             
                             try:
-                                with open("output/rag_eval_results.json", "r") as f:
-                                    metrics_data = json.load(f)
-                                
-                                cols = st.columns(4)
-                                metric_names = {
-                                    'answer_relevancy': ('Relevancy', ':material/target:'),
-                                    'faithfulness': ('Faithfulness', ':material/check_box:'),
-                                    'context_precision': ('Precision', ':material/search:'),
-                                    'context_recall': ('Recall', ':material/finance:'),
-                                    'answer_correctness': ('Answer Correctness',':material/finance:')
-                                }
-                                
-                                for idx, (key, (label, icon)) in enumerate(metric_names.items()):
-                                    if key in metrics_data:
-                                        cols[idx].metric(
-                                            f"{icon} {label}",
-                                            f"{metrics_data[key]:.2%}"
-                                        )
+                                try:
+                                    # Prova formato JSON standard
+                                    with open("output/rag_eval_results.json", "r") as f:
+                                        metrics_data = json.load(f)
+                                    
+                                    cols = st.columns(5)
+                                    metric_names = {
+                                        'answer_relevancy': ('Relevancy', ':material/target:'),
+                                        'faithfulness': ('Faithfulness', ':material/check_box:'),
+                                        'context_precision': ('Precision', ':material/search:'),
+                                        'context_recall': ('Recall', ':material/finance:'),
+                                        'answer_correctness': ('Answer Correctness',':material/finance:')
+                                    }
+                                    
+                                    for idx, (key, (label, icon)) in enumerate(metric_names.items()):
+                                        if key in metrics_data:
+                                            cols[idx].metric(
+                                                f"{icon} {label}",
+                                                f"{metrics_data[key]:.2%}"
+                                            )
+                                except json.JSONDecodeError:
+                                    df = pd.read_json("output/rag_eval_results.json", lines=True)
+                                    metrics_data = df.iloc[-1].to_dict()  
+
+                                    display_cols = ['user_input', 
+                                                    'response',
+                                                    'faithfulness', 
+                                                    'answer_correctness', 
+                                                    'answer_relevancy', 
+                                                    'context_precision', 
+                                                    'context_recall']
+                                    
+                                    st.dataframe(
+                                        df[display_cols], 
+                                        use_container_width=True,
+                                        hide_index=True
+                                    )
                             except FileNotFoundError:
                                 st.info("RAGAS metrics not available for this query.")
                             except Exception as e:

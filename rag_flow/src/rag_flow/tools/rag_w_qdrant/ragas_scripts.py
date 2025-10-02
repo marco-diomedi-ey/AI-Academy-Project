@@ -9,6 +9,7 @@ from ragas.metrics import \
     context_precision  
 from ragas.metrics import context_recall  
 from ragas.metrics import faithfulness  
+from ragas.run_config import RunConfig
 
 from .rag_structure import get_contexts_for_question
 from .utils import Settings
@@ -228,11 +229,18 @@ def ragas_evaluation(
     if all("reference" in row for row in dataset):
         metrics.append(answer_correctness)
 
+    run_config = RunConfig(
+    timeout=300,  
+    max_retries=15,
+    max_wait=120
+    )
+
     ragas_result = evaluate(
         dataset=evaluation_dataset,
         metrics=metrics,
         llm=llm,  
         embeddings=embeddings,
+        run_config=run_config
     )
 
     df = ragas_result.to_pandas()

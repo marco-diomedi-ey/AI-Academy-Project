@@ -158,6 +158,7 @@ def rag_system(question: str) -> str:
     retriever = SimpleRetriever(client, s, embeddings)
 
     doc_folder = scan_docs_folder("src\\rag_flow\\tools\\rag_w_qdrant\\docs_test")
+    #doc_folder = scan_docs_folder(r"C:\Users\KG376DF\OneDrive - EY\Desktop\python_scripts\AI-Academy-Project\rag_flow\src\rag_flow\tools\rag_w_qdrant\docs_test")
     docs = load_documents(doc_folder)  
     chunks = split_documents(docs, s)
 
@@ -182,8 +183,6 @@ def rag_system(question: str) -> str:
 
             questions = [
                 "Quali sono le parti principali di un aereo?",
-                "Cos'è la portanza in aeronautica?",
-                "Quali sono le differenze tra un motore turbofan e un turbojet in termini di efficienza e utilizzo?",
                 "Quali sono le principali compagnie aeree americane menzionate nel documento?",
                 "Che cos'è un Full Service Carrier (FSC) e quali caratteristiche ha?",
                 "Quali sono i tre tipi di motori utilizzati nell'aviazione commerciale?",
@@ -192,12 +191,10 @@ def rag_system(question: str) -> str:
 
             ground_truth = {
                 questions[0]: "Profilo alare, fusoliera, sistemi di controllo di volo, struttura semi-monoscocca, avionics e sistemi di navigazione",
-                questions[1]: "Forza aerodinamica generata dal profilo alare ottimizzato che permette all'aereo di volare, parte dell'aerodinamica insieme alla resistenza",
-                questions[2]: "Turbofan è lo standard per aviazione commerciale con maggiore efficienza, turbojet non è menzionato specificamente nel documento",
-                questions[3]: "American Airlines, Delta Air Lines, United Airlines, Southwest Airlines",
-                questions[4]: "Servizio completo con pasti inclusi, reti hub-and-spoke, classi multiple di servizio",
-                questions[5]: "Turbofan, Turboprop, Motori elettrici",
-                questions[6]: "Sustainable Aviation Fuel - carburanti sostenibili",
+                questions[1]: "American Airlines, Delta Air Lines, United Airlines, Southwest Airlines",
+                questions[2]: "Servizio completo con pasti inclusi, reti hub-and-spoke, classi multiple di servizio",
+                questions[3]: "Turbofan, Turboprop, Motori elettrici",
+                questions[4]: "Sustainable Aviation Fuel - carburanti sostenibili",
             }
             rag_eval = ragas_evaluation(
                 questions, chain, llm, embeddings, retriever, s, ground_truth

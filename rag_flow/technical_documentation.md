@@ -347,7 +347,7 @@ output/
 **Trustable Sources Control:**
 ```python
 # Metadata trustability assessment in load_documents()
-trustability = "trusted" if "berlino_c" in filename else "untrusted" 
+trustability = "trusted" 
 doc.metadata["trustability"] = trustability
 
 # RAG chain filtering untrusted content

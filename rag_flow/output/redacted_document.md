@@ -1,58 +1,73 @@
 ```markdown
-# Funzionamento di un Aeroplano: Progettazione, Tecnologie e Materiali
+# Le Maggiori Aziende Aeronautiche Globali
 
-Un aeroplano è un mezzo di trasporto straordinario che combina progettazione innovativa, tecnologie moderne e materiali all'avanguardia per consentire il volo nell'atmosfera terrestre. Questo documento approfondisce gli aspetti essenziali che permettono il corretto funzionamento degli aerei in maniera equilibrata e informativa.
-
----
-
-## **Progettazione Aerodinamica**
-L'aerodinamica è fondamentale per il volo di un aeroplano, poiché consente di bilanciare la portanza e ridurre la resistenza:
-- **Portanza**: Generata dal profilo alare, è la forza verticale necessaria a sostenere l’aeroplano in volo.
-- **Resistenza**: Tramite un design accurato della fusoliera, si minimizza l’attrito con l’aria, migliorando l’efficienza generale.
-- **Simulazioni CFD**: L’uso delle **simulazioni CFD** (*Computational Fluid Dynamics*) permette ai progettisti di simulare e ottimizzare il comportamento aerodinamico degli aerei, garantendo stabilità e manovrabilità.
+L'industria aeronautica globale comprende sia compagnie aeree che aziende produttrici di aeromobili e tecnologie strategiche. Questo settore è caratterizzato da un'evoluzione tecnologica costante e da una competizione serrata tra i principali protagonisti. Di seguito vengono illustrati i principali operatori del settore, divisi per categoria: compagnie aeree e produttori di aeromobili.
 
 ---
 
-## **Materiali Utilizzati**
-Gli aerei sono costruiti con materiali che rispettano specifici requisiti di leggerezza, resistenza e capacità di sopportare sollecitazioni:
-- **Fibra di carbonio**: Garantisce leggerezza e resistenza strutturale.
-- **Leghe di alluminio**: Apprezzate per la loro leggerezza e resistenza alla corrosione.
-- **Componenti in titanio**: Utilizzati per gestire alte temperature e offrire robustezza.
+## Compagnie Aeree
+
+### **Compagnie Americane**
+1. **American Airlines**  
+   Considerata una delle principali compagnie aeree al mondo per flotta e ricavi, American Airlines offre una gamma diversificata di servizi su scala globale, cercando di soddisfare esigenze differenti nel mercato.
+   
+2. **Delta Air Lines**  
+   Riconosciuta per il suo impegno verso l'innovazione tecnologica e i servizi ai clienti, Delta si posiziona tra le principali compagnie statunitensi nel settore.
+   
+3. **United Airlines**  
+   United Airlines ha una forte presenza internazionale con una rete di collegamenti strategici che sfruttano i suoi numerosi hub.
+   
+4. **Southwest Airlines**  
+   Pioniera nel modello low-cost negli Stati Uniti, Southwest Airlines è conosciuta per la sua efficienza operativa e i costi accessibili.
+
+### **Compagnie Europee**
+1. **Lufthansa**  
+   Il gruppo Lufthansa, con sede in Germania, è uno dei principali protagonisti europei, offrendo un'ampia rete di rotte e contribuendo in modo significativo all'aviazione globale.
+   
+2. **Air France-KLM**  
+   Questa collaborazione franco-olandese gestisce hub internazionali a Parigi e Amsterdam, con un ruolo fondamentale nel collegare regioni diverse del mondo.
+   
+3. **British Airways**  
+   British Airways, compagnia di bandiera del Regno Unito, è apprezzata a livello internazionale per il suo servizio e la sua lunga tradizione di qualità.
+   
+4. **Ryanair**  
+   Leader nel settore low-cost in Europa, Ryanair offre collegamenti a numerose destinazioni a prezzi competitivi, con un focus sulla convenienza.
+   
+5. **EasyJet**  
+   Un'altra compagnia europea di spicco, EasyJet garantisce collegamenti economici e pratici, concentrandosi su efficienza e snellezza operativa.
+
+### **Compagnie Asiatiche e del Medio Oriente**
+1. **Emirates**  
+   Con sede a Dubai, Emirates è nota per il suo approccio orientato al lusso e all'innovazione, un servizio che si contraddistingue nei mercati globali. Il suo impegno include una flotta moderna e una gamma di servizi premium.
 
 ---
 
-## **Tecnologie di Navigazione e Sicurezza**
-Gli aerei impiegano sistemi avanzati per assicurare affidabilità e sicurezza, cruciali nel settore del trasporto aereo:
-- **Sistemi di Navigazione**:
-  - **GPS** (*Global Positioning System*): Fornisce informazioni precise sulla posizione dell'aereo.
-  - **INS** (*Inertial Navigation System*): Un sistema autonomo basato su sensori inerziali per la navigazione indipendente.
-  
-- **Tecnologie di Sicurezza**:
-  - **TCAS** (*Traffic Collision Avoidance System*): Permette di evitare collisioni, rilevando altri velivoli nelle vicinanze.
-  - **GPWS** (*Ground Proximity Warning System*): Allerta i piloti del rischio di avvicinamento a terra, prevenendo incidenti.
+## I Maggiori Produttori di Aeromobili
 
-Gli aeroplani moderni dispongono di sistemi ridondanti per le funzioni critiche, garantendo continuità operativa in situazioni d’emergenza.
+### **Boeing**  
+Boeing, fondata nel 1916 a Seattle, è un'azienda statunitense che opera nei settori dell'aviazione civile e militare. La sua gamma di prodotti include aeromobili commerciali come la serie 737, 777 e 787, oltre a sistemi militari avanzati come gli aerei stealth F-22 e F-35. Boeing si distingue per un'ampia portata globale e una significativa influenza tecnologica.  
+Per ulteriori dettagli su Boeing: [Wikipedia - Boeing](https://it.wikipedia.org/wiki/Boeing)
+
+### **Airbus**  
+Airbus, principale concorrente di Boeing, è un'azienda europea leader nella produzione di aeromobili commerciali e sistemi aerospaziali. Con sedi in diversi paesi europei, Airbus offre modelli come l'A320, A350 e l'A380. Inoltre, l'azienda punta su tecnologie eco-efficienti per un futuro più sostenibile.  
+Per ulteriori dettagli su Airbus: [Wikipedia - Airbus](https://it.wikipedia.org/wiki/Airbus)
 
 ---
 
-## **Certificazione e Test di Volo**
-Prima dell'entrata in servizio, gli aeroplani vengono sottoposti a processi di certificazione e test di volo rigorosi, che includono:
-- **Verifica dell'aerodinamica**.
-- **Controllo dell’affidabilità dei sistemi di bordo**.
-- **Conformità alle norme internazionali di sicurezza**.
+## Leadership Tecnologica e Collaborazioni Internazionali
+
+Gli Stati Uniti mantengono una posizione di leadership nel settore tecnologico aeronautico, con una forte presenza nell'aviazione militare e nello sviluppo di droni e aerei stealth avanzati. Tra i modelli più noti figurano l'F-22 e l'F-35, che rappresentano tecnologie d'avanguardia.
+
+In altre regioni come Europa, Cina, Russia, India e Israele, si osservano investimenti significativi e collaborazioni strategiche per espandere la ricerca e lo sviluppo di tecnologie aeronautiche. Questi paesi stanno lavorando su innovazioni riguardanti aerei civili, militari e sistemi aerospaziali avanzati.
 
 ---
 
-## **Conclusioni**
-I successi tecnologici e ingegneristici degli aeroplani derivano dall'integrazione di una progettazione aerodinamica di precisione, materiali avanzati e sistemi tecnologici di navigazione e sicurezza. Questi elementi garantiscono alte prestazioni e sicurezza per passeggeri e personale di bordo, mantenendo un approccio bilanciato e allineato agli standard globali.
+## Risorse e Approfondimenti
+
+Per un elenco completo delle aziende aeronautiche nel panorama internazionale, è possibile visitare la relativa categoria su Wikipedia: [Wikipedia - Aziende aeronautiche](https://it.wikipedia.org/wiki/Categoria:Aziende_aeronautiche).  
+Dettagli sulla competizione tra Boeing e Airbus sono disponibili qui: [Wikipedia - Concorrenza tra Airbus e Boeing](https://it.wikipedia.org/wiki/Concorrenza_tra_Airbus_e_Boeing).
 
 ---
 
-## **Per Approfondire**
-- **[Storia dell'Aeroplano](https://it.wikipedia.org/wiki/Aeroplano#Storia)**
-- **[Aeroplano Militare nel Dopoguerra](https://it.wikipedia.org/wiki/Aeroplano#L'aereo_militare_nel_periodo_postbellico)**
-- **[Aeroplano Civile e Trasporto nel Dopoguerra](https://it.wikipedia.org/wiki/Aeroplano#L'aereo_civile_e_il_trasporto_nel_periodo_postbellico)**
-
----
-Fonte: Documento fornito da [guida_aeronautica.md].
+Questo documento offre una panoramica sulle principali aziende del settore aeronautico globale, sia in campo civile che militare, presentando una visione equilibrata delle loro caratteristiche principali.
 ```

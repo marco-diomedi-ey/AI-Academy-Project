@@ -47,6 +47,11 @@ uv sync
 
 # Alternativa con pip
 pip install -r requirements.txt
+
+# Creazione file env
+cp .env.full_example .env
+
+# Da compilare con le proprie chiavi per variabili d'ambiente
 ```
 
 ## Struttura del Repository
