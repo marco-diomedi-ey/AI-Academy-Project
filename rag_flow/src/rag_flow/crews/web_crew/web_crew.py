@@ -17,14 +17,67 @@ load_dotenv()
 
 # Configure requests session to bypass SSL issues
 class NoSSLHTTPAdapter(HTTPAdapter):
-    """Custom HTTP Adapter that disables SSL verification"""
+    """
+    Custom HTTP Adapter that disables SSL verification for requests.
+    
+    This adapter is designed to bypass SSL certificate verification issues
+    by creating an unverified SSL context. It extends the HTTPAdapter class
+    to provide custom SSL handling for HTTP requests.
+    
+    Methods
+    -------
+    init_poolmanager(*args, **kwargs)
+        Initialize the pool manager with SSL verification disabled
+    """
     def init_poolmanager(self, *args, **kwargs):
+        """
+        Initialize the connection pool manager with SSL verification disabled.
+        
+        This method overrides the default pool manager initialization to use
+        an unverified SSL context, effectively disabling SSL certificate
+        verification for all requests made through this adapter.
+        
+        Parameters
+        ----------
+        *args : tuple
+            Variable length argument list passed to parent init_poolmanager
+        **kwargs : dict
+            Arbitrary keyword arguments passed to parent init_poolmanager.
+            The 'ssl_context' key will be overridden with unverified context
+            
+        Returns
+        -------
+        object
+            The initialized pool manager object from the parent class
+        """
         kwargs['ssl_context'] = ssl._create_unverified_context()
         return super().init_poolmanager(*args, **kwargs)
 
 # Monkey patch requests to use our custom adapter
 original_request = requests.Session.request
 def patched_request(self, *args, **kwargs):
+    """
+    Patched version of requests.Session.request that disables SSL verification.
+    
+    This function monkey-patches the requests Session object to automatically
+    mount the NoSSLHTTPAdapter for HTTPS requests and disable SSL verification
+    by default. It maintains the original functionality while adding SSL bypass.
+    
+    Parameters
+    ----------
+    self : requests.Session
+        The requests Session instance being patched
+    *args : tuple
+        Variable length argument list passed to original request method
+    **kwargs : dict
+        Arbitrary keyword arguments passed to original request method.
+        The 'verify' key will be set to False if not explicitly provided
+        
+    Returns
+    -------
+    requests.Response
+        The response object returned by the original request method
+    """
     if not hasattr(self, '_no_ssl_mounted'):
         self.mount('https://', NoSSLHTTPAdapter())
         self._no_ssl_mounted = True
@@ -36,6 +89,26 @@ requests.Session.request = patched_request
 # Also patch the main requests module
 original_requests_request = requests.request
 def patched_requests_request(*args, **kwargs):
+    """
+    Patched version of the main requests.request function with SSL verification disabled.
+    
+    This function monkey-patches the main requests module's request function
+    to automatically disable SSL verification for all requests made through
+    the requests.request() function directly (not through a Session object).
+    
+    Parameters
+    ----------
+    *args : tuple
+        Variable length argument list passed to original request function
+    **kwargs : dict
+        Arbitrary keyword arguments passed to original request function.
+        The 'verify' key will be set to False if not explicitly provided
+        
+    Returns
+    -------
+    requests.Response
+        The response object returned by the original request function
+    """
     kwargs.setdefault('verify', False)
     return original_requests_request(*args, **kwargs)
 
