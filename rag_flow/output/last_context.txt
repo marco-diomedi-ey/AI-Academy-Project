@@ -1,0 +1,129 @@
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Compagnie Americane
+
+American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi
+
+Delta Air Lines – Leader nell'innovazione e nel servizio clienti
+
+United Airlines – Forte presenza internazionale e hub strategici
+
+Southwest Airlines – Pioniere del modello low-cost
+
+Compagnie Europee
+
+Lufthansa – Gruppo tedesco con forte presenza in Europa
+
+Air France-KLM – Alleanza franco-olandese con hub a Parigi e Amsterdam
+
+British Airways – Compagnia di bandiera britannica
+
+Ryanair – Leader europeo del low-cost
+
+EasyJet – Seconda compagnia low-cost europea
+
+Compagnie Asiatiche e del Medio Oriente
+
+Emirates – Luxury carrier di Dubai con flotta moderna 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Germania – 37,5 milioni
+
+Giappone – 36,9 milioni
+
+Grecia – 36 milioni
+
+Turismo in Italia: Focus sui Voli
+
+Nel 2024 l’Italia ha registrato 458,4 milioni di presenze turistiche, con oltre 250 milioni di presenze straniere (54,6% del totale). Le principali città raggiunte tramite volo sono Roma, Milano, Venezia, Firenze e Napoli. Il traffico aereo internazionale è tornato ai livelli pre-pandemia, trainato dalla domanda di turismo culturale e leisure.
+
+Tendenze e Nuove Abitudini
+
+Viaggi brevi e frequenti: Cresce la preferenza per soggiorni più brevi ma ripetuti durante l’anno.
+
+Sostenibilità: Il 38% dei viaggiatori considera l’impatto ambientale nella scelta del volo e della destinazione. 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Guida Completa all'Aeronautica
+
+Introduzione
+
+L'aeronautica rappresenta uno dei settori più avanzati e strategici dell'economia globale, combinando ingegneria di precisione, tecnologia all'avanguardia e servizi di trasporto essenziali per il commercio mondiale e la mobilità delle persone. Il settore è anche un pilastro fondamentale per il turismo internazionale, facilitando gli spostamenti di milioni di viaggiatori ogni anno e contribuendo in modo significativo allo sviluppo economico e culturale dei Paesi.
+
+🏢 Maggiori Compagnie Aeree Mondiali
+
+Compagnie Americane
+
+American Airlines – La più grande compagnia aerea al mondo per flotta e ricavi 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Compagnie Asiatiche e del Medio Oriente
+
+Emirates – Luxury carrier di Dubai con flotta moderna
+
+Qatar Airways – Compagnia premium del Qatar
+
+Singapore Airlines – Riconosciuta per l'eccellenza del servizio
+
+Cathay Pacific – Hub strategico a Hong Kong
+
+ANA (All Nippon Airways) – Compagnia giapponese di prestigio
+
+Compagnie Italiane
+
+ITA Airways – Nuova compagnia di bandiera italiana
+
+Ryanair – Forte presenza sul mercato domestico italiano
+
+📊 Caratteristiche del Settore Aeronautico
+
+Struttura del Mercato
+
+Alta barriera all'ingresso: Investimenti enormi in flotta e infrastrutture
+
+Regolamentazione intensa: Normative di sicurezza e ambientali stringenti 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Principali Stati Coinvolti
+
+Stati Uniti: Leader mondiale con la US Air Force, dotata di caccia avanzati (F-22, F-35), bombardieri strategici (B-2, B-21) e droni autonomi.
+
+Cina: Crescita continua della PLAAF, con investimenti in caccia stealth (J-20), droni e tecnologie spaziali.
+
+Russia: Flotta storica con caccia Su-57, bombardieri Tupolev e forte presenza in operazioni internazionali.
+
+Europa: Collaborazioni tra Francia, Germania, Italia e Regno Unito, con progetti comuni come il Future Combat Air System (FCAS).
+
+India e Israele: Investimenti crescenti in tecnologie autonome, cyberdifesa e droni da combattimento.
+
+Investimenti Globali e Europei 
+
+[source:src\rag_flow\tools\rag_w_qdrant\docs_test\guida_aeronautica.md][trustability: trusted] Fattori Chiave di Successo
+
+Gestione dei costi operativi
+
+Ottimizzazione della rete di rotte
+
+Gestione del revenue management
+
+Manutenzione e sicurezza
+
+Esperienza del passeggero
+
+Sostenibilità ambientale
+
+✈️ Fattori per la Creazione di un Aereo
+
+1. Progettazione e Ingegneria
+
+Aerodinamica
+
+Profilo alare: Ottimizzazione per portanza ed efficienza
+
+Fusoliera: Design per ridurre la resistenza aerodinamica
+
+Stabilità: Controllo di volo e manovrabilità
+
+CFD (Computational Fluid Dynamics): Simulazioni avanzate
+
+Struttura
+
+Materiali compositi: Fibra di carbonio per leggerezza e resistenza
+
+Leghe di alluminio: Tradizionali ma ancora utilizzate
+
+Titanio: Per componenti critici ad alta temperatura 
