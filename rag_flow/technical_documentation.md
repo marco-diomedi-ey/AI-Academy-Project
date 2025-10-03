@@ -151,6 +151,10 @@ source .venv/bin/activate  # Linux/Mac
 
 # Esecuzione interattiva
 crewai run
+
+# Esecuzione con Streamlit dalla root principale ./AI-Academy-Project
+python -m streamlit run src/rag_flow/streamlit_main_app.py --theme.primaryColor="#0d47a1"
+
 ```
 
 **Modalità Debug:**
